@@ -1,17 +1,20 @@
-import Head from 'next/head'
-import { AppProps } from 'next/app'
-import '../styles/index.css'
+import Head from "next/head";
+import { AppProps } from "next/app";
+import "../styles/index.css";
+import { AuthProvider } from "../hooks/useAuth";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>NextJS TailwindCSS TypeScript Starter</title>
+        <title>Options Co-Pilot</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <Component {...pageProps} />
+      <AuthProvider>
+        <Component {...pageProps} />
+      </AuthProvider>
     </>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;

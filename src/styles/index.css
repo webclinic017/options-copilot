@@ -1,6 +1,18 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
+@import "tailwindcss/base";
+@import "tailwindcss/components";
 
 /* Your own custom component styles */
 
-@import 'tailwindcss/utilities';
+@import "tailwindcss/utilities";
+
+@layer base {
+  body {
+    @apply bg-gradient-to-b from-gray-800 via-gray-900 to-black  text-white;
+  }
+}
+
+@layer components {
+  .loginButton {
+    @apply text-sm hover:bg-gray-500 max-w-max max-h-8 focus:bg-green-500  py-1.5 px-4 transition-colors;
+  }
+}
