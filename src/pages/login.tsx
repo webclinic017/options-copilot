@@ -14,7 +14,7 @@ const Login = () => {
   const [isSigningIn, setIsSigningIn] = useState(true);
   const router = useRouter();
   const [login, setLogin] = useState(false);
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, signUp } = useAuth();
   const {
     register,
     handleSubmit,
