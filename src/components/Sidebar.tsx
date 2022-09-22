@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {
@@ -7,6 +7,7 @@ import {
   ReportIcon,
   AnalyticsIcon,
 } from "./icons";
+import { useWindowSize } from "../hooks/useWindowSize";
 
 const menuItems = [
   { id: 1, label: "Home", icon: RobotLogo, link: "/" },
@@ -23,6 +24,15 @@ const Sidebar = () => {
   const [toggleCollapse, setToggleCollapse] = useState(false);
   const [isCollapsible, setIsCollapsible] = useState(false);
   const router = useRouter();
+  const windowSize = useWindowSize();
+  const mobileBreakPoint = 425;
+
+  useEffect(() => {
+    if (windowSize.width <= mobileBreakPoint) {
+      setToggleCollapse(true);
+    }
+  }, [toggleCollapse, windowSize.width]);
+
   const onMouseOver = (showIcon: boolean) => {
     setIsCollapsible(showIcon);
   };
@@ -32,10 +42,8 @@ const Sidebar = () => {
   };
 
   const activeMenu = useMemo(() => {
-    return menuItems.find((menu) => menu.link === router.pathname);
+    return menuItems.find((menu) => menu.link === router.pathname) ?? { id: 0 };
   }, [router.pathname]);
-
-  console.log(toggleCollapse, isCollapsible, activeMenu);
 
   return (
     <div

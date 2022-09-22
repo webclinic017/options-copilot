@@ -2,10 +2,8 @@ import useAuth from "../hooks/useAuth";
 import { supabase } from "../utils/supabaseClient";
 import Layout from "../components/Layout";
 
-const Home = ({ user }) => {
+const Home = () => {
   const { signOut } = useAuth();
-
-  console.log("user", user);
 
   return (
     <Layout>
@@ -18,7 +16,6 @@ export default Home;
 
 export async function getServerSideProps({ req }) {
   const { user } = await supabase.auth.api.getUserByCookie(req);
-
   if (!user) {
     return {
       redirect: { destination: "/login", permanent: false },

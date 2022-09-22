@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+} from "react";
 import { supabase } from "../utils/supabaseClient";
 import { useRouter } from "next/router";
 
@@ -32,9 +38,10 @@ export const AuthProvider = (props) => {
           credentials: "same-origin",
           body: JSON.stringify({ event, session }),
         }).then((res) => res.json());
-        console.log("event", event);
-        console.log("session", session);
-        setUser(session?.user ?? null);
+        const sessionUser = supabase.auth.user();
+        if (!sessionUser) {
+          setUser(session?.user ?? null);
+        }
         setLoading(false);
         if (session === null) router.push("/login");
       }
@@ -82,15 +89,18 @@ export const AuthProvider = (props) => {
   const signOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
-    router.push("/");
+    router.push("/login");
   };
 
-  const value = {
-    signUp,
-    signIn,
-    signOut,
-    user,
-  };
+  const value = useMemo(
+    () => ({
+      signUp,
+      signIn,
+      signOut,
+      user,
+    }),
+    [user]
+  );
   return <AuthContext.Provider value={value} {...props} />;
 };
 
