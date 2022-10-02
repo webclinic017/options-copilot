@@ -1,5 +1,5 @@
 import { supabase } from "../utils/supabaseClient";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { User } from "@supabase/supabase-js";
 
 export const useTrades = (user: User, from: number, to: number) => {
@@ -9,7 +9,9 @@ export const useTrades = (user: User, from: number, to: number) => {
   const addTrade = async (data: object) => {
     try {
       let { body } = await supabase.from("trade_records").insert(data);
-      getTrades();
+      if (body.length) {
+        getTrades();
+      }
       return body;
     } catch (error) {
       console.log("error", error);
@@ -21,9 +23,26 @@ export const useTrades = (user: User, from: number, to: number) => {
       .select(`*`, { count: "exact" })
       .range(from, to)
       .eq("user_id", user.id)
-      .order("date_time", { ascending: true });
+      .order("date_time", { ascending: false });
     setTrades(data);
     setTotalTrades(count);
+  };
+
+  const deleteTrades = async (tradeToDelete: any[]) => {
+    if (!tradeToDelete) return;
+    try {
+      const { data, error } = await supabase
+        .from("trade_records")
+        .delete()
+        .match({ [tradeToDelete[0]]: tradeToDelete[1] });
+
+      if (data.length) {
+        getTrades();
+        return data;
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   useEffect(() => {
@@ -37,5 +56,6 @@ export const useTrades = (user: User, from: number, to: number) => {
     addTrade,
     totalTrades,
     setTrades,
+    deleteTrades,
   };
 };

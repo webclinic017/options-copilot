@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 
@@ -5,9 +6,35 @@
 
 @import "tailwindcss/utilities";
 
+@import "~rsuite/dist/rsuite.min.css";
+
+.rs-drawer-content {
+  background-color: #1f2837 !important;
+  color: white;
+}
+
+.rs-drawer-title {
+  color: white;
+}
+
+.rs-picker-menu {
+  background-color: #292d33;
+}
+
+.rs-calendar-month {
+  background-color: #292d33;
+}
+.rs-calendar-month-dropdown {
+  background-color: #292d33;
+}
+.rs-calendar-btn-close {
+  background-color: #292d33;
+}
+
 @layer base {
   body {
     @apply bg-gradient-to-b from-gray-800 via-gray-900 to-black  text-white;
+    font-family: "Ubuntu", sans-serif;
   }
 }
 

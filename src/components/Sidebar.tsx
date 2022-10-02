@@ -66,7 +66,7 @@ const Sidebar = () => {
             </div>
 
             <span
-              className="mt-2 text-lg font-medium text-text"
+              className="mt-2 text-lg font-bold text-white"
               hidden={toggleCollapse}
             >
               Options Co-Pilot
@@ -101,7 +101,7 @@ const Sidebar = () => {
                     </div>
                     {!toggleCollapse && (
                       <span
-                        className={`text-md  font-medium ${
+                        className={`text-md  font-bold ${
                           activeMenu.id === menu.id
                             ? "text-blue-300"
                             : " text-white"

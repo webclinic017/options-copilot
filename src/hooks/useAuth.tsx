@@ -53,37 +53,31 @@ export const AuthProvider = (props) => {
   }, []);
 
   const signUp = async (email: string, password: string) => {
-    await supabase.auth
-      .signUp({
-        email: email,
-        password: password,
-      })
-      .then((response) => {
-        if (response?.session) {
-          router.push("/");
-        }
-        if (response?.error) {
-          alert(response?.error.message);
-        }
-      })
-      .catch((error) => alert(error.message));
+    const response = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
+
+    if (response?.session) {
+      router.push("/");
+    }
+    if (response?.error) {
+      alert(response?.error.message);
+    }
   };
 
   const signIn = async (email: string, password: string) => {
-    await supabase.auth
-      .signIn({
-        email: email,
-        password: password,
-      })
-      .then((response) => {
-        if (response?.session) {
-          router.push("/");
-        }
-        if (response?.error) {
-          alert(response?.error.message);
-        }
-      })
-      .catch((error) => alert(error.message));
+    const response = await supabase.auth.signIn({
+      email: email,
+      password: password,
+    });
+
+    if (response?.session) {
+      router.push("/");
+    }
+    if (response?.error) {
+      alert(response?.error.message);
+    }
   };
 
   const signOut = async () => {
