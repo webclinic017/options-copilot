@@ -1,10 +1,28 @@
 import { supabase } from "../utils/supabaseClient";
 import { useState, useEffect } from "react";
-import { User } from "@supabase/supabase-js";
+import { getPagination } from "../utils/helper";
 
-export const useTrades = (user: User, from: number, to: number) => {
+interface Props {
+  sortName?: string;
+  sortAsc?: boolean;
+  filterByDateRange?: null | [Date, Date];
+  pageNumber: number;
+  maxPageSize: number;
+}
+
+export const useTrades = ({
+  sortName = "date_time",
+  sortAsc = true,
+  filterByDateRange = null,
+  pageNumber,
+  maxPageSize,
+}: Props) => {
   const [trades, setTrades] = useState([]);
   const [totalTrades, setTotalTrades] = useState(null);
+
+  const user = supabase.auth.user();
+
+  const { pageStart, pageEnd } = getPagination(pageNumber, maxPageSize);
 
   const addTrade = async (data: object) => {
     try {
@@ -21,14 +39,27 @@ export const useTrades = (user: User, from: number, to: number) => {
     const { data, error, count } = await supabase
       .from("trade_records")
       .select(`*`, { count: "exact" })
-      .range(from, to)
+      .range(pageStart, pageEnd)
       .eq("user_id", user.id)
-      .order("date_time", { ascending: false });
+      .order(sortName, { ascending: sortAsc });
     setTrades(data);
     setTotalTrades(count);
   };
 
-  const deleteTrades = async (tradeToDelete: any[]) => {
+  const getTradesByDate = async (startDate: string, endDate: string) => {
+    const { data, error, count } = await supabase
+      .from("trade_records")
+      .select(`*`, { count: "exact" })
+      .range(pageStart, pageEnd)
+      .eq("user_id", user.id)
+      .gte("date_time", startDate)
+      .lte("date_time", endDate)
+      .order(sortName, { ascending: sortAsc });
+    setTrades(data);
+    setTotalTrades(count);
+  };
+
+  const deleteTrades = async (tradeToDelete: [string, number | string]) => {
     if (!tradeToDelete) return;
     try {
       const { data, error } = await supabase
@@ -46,16 +77,23 @@ export const useTrades = (user: User, from: number, to: number) => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (user && !filterByDateRange) {
       getTrades().catch((error) => console.log("error", error));
     }
-  }, [user, from, to]);
+
+    if (user && filterByDateRange) {
+      getTradesByDate(
+        filterByDateRange[0].toLocaleString(),
+        filterByDateRange[1].toLocaleString()
+      ).catch((error) => console.log("error", error));
+    }
+  }, [user, sortName, sortAsc, filterByDateRange, pageNumber, maxPageSize]);
 
   return {
     trades,
     addTrade,
-    totalTrades,
     setTrades,
     deleteTrades,
+    totalTrades,
   };
 };

@@ -1,47 +1,58 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState } from "react";
 import Layout from "../../components/Layout";
 import { useTrades } from "../../hooks/useTrades";
 import { supabase } from "../../utils/supabaseClient";
 import TradeTable from "../../components/TradeTable";
 import ButtonFileUpload from "../../components/ButtonFileUpload";
-import { getPagination } from "../../utils/helper";
 import DrawerView from "../../components/DrawerView";
 import { ManualTrade } from "../../interfaces/trade";
-import { EMPTY_SELECTOR_STATE, INITIAL_PAGE, MAX_PAGE } from "../../constants";
+import {
+  EMPTY_SELECTOR_STATE,
+  mobileBreakPoint,
+  tableBreakPoint,
+  defaultPageLimit,
+} from "../../constants";
+import useTradeFilters from "../../hooks/useTradeFilters";
+import DateRangePicker from "rsuite/DateRangePicker";
+import Pagination from "rsuite/Pagination";
+import { useWindowSize } from "../../hooks/useWindowSize";
 
 const trades = ({ user }) => {
-  const [dataLoaded, setDataLoaded] = useState(true);
+  const [hasDataLoaded, setDataLoaded] = useState(true);
   const [showDrawer, setShowDrawer] = useState(false);
-
-  const [page, setPage] = useState(INITIAL_PAGE);
-  const [pageSize, setPageSize] = useState(MAX_PAGE);
   const [selectTradeToDelete, setSelectTradeToDelete] = useState<
     number | number[]
   >(EMPTY_SELECTOR_STATE);
-  const { tableStart, tableEnd } = getPagination(page, pageSize);
-  const { trades, setTrades, addTrade, totalTrades, deleteTrades } = useTrades(
-    user,
-    tableStart,
-    tableEnd
-  );
+  const [activePage, setActivePage] = useState(1);
+  const [limit, setLimit] = useState(defaultPageLimit);
 
-  const disablePrevButton = useMemo(() => page <= INITIAL_PAGE, [page]);
-  const disableNextButton = useMemo(
-    () => page >= Math.ceil(totalTrades / pageSize),
-    [page, totalTrades]
-  );
+  const { sortOrder, setSortOrder } = useTradeFilters();
 
-  const handleSubmit = async (formData: ManualTrade) => {
+  const { trades, setTrades, addTrade, deleteTrades, totalTrades } = useTrades({
+    sortName: sortOrder.name,
+    sortAsc: sortOrder.ascending,
+    filterByDateRange: sortOrder.dateRange,
+    pageNumber: activePage,
+    maxPageSize: limit,
+  });
+
+  const handleSubmit = async (formData: ManualTrade | ManualTrade[]) => {
+    setDataLoaded(false);
     try {
       const data = await addTrade(formData);
 
       if (data) {
         setTrades(data);
         setShowDrawer(false);
+        setSortOrder({
+          ...sortOrder,
+          dateRange: null,
+        });
       }
     } catch (error) {
       console.log("error", error);
     }
+    setDataLoaded(true);
   };
 
   const deleteTrade = async (data: number | number[]) => {
@@ -52,6 +63,8 @@ const trades = ({ user }) => {
     );
     setSelectTradeToDelete(EMPTY_SELECTOR_STATE);
   };
+
+  const windowSize = useWindowSize();
 
   return (
     <Layout>
@@ -64,12 +77,7 @@ const trades = ({ user }) => {
           >
             Add Trade
           </button>
-          <ButtonFileUpload
-            user={user}
-            addTrade={addTrade}
-            setTrades={setTrades}
-            setDataLoaded={setDataLoaded}
-          />
+          <ButtonFileUpload user={user} handleUpload={handleSubmit} />
         </div>
       </div>
       {selectTradeToDelete != EMPTY_SELECTOR_STATE && (
@@ -83,48 +91,58 @@ const trades = ({ user }) => {
         </div>
       )}
 
-      <TradeTable
-        trades={trades}
-        hasDataLoaded={dataLoaded}
-        selectTradeToDelete={selectTradeToDelete}
-        setSelectTradeToDelete={setSelectTradeToDelete}
-      />
       {trades.length > 0 && (
-        <div className="flex flex-col items-center mt-8 space-y-5">
-          <span className="text-sm text-gray-700 dark:text-gray-400">
-            Showing{" "}
-            <span className="font-semibold text-gray-900 dark:text-white">
-              {tableStart + 1}
-            </span>{" "}
-            to{" "}
-            <span className="font-semibold text-gray-900 dark:text-white">
-              {tableEnd > totalTrades ? totalTrades : tableEnd + 1}
-            </span>{" "}
-            of{" "}
-            <span className="font-semibold text-gray-900 dark:text-white">
-              {totalTrades}
-            </span>{" "}
-            Entries
-          </span>
-          <div className="inline-flex mt-2 xs:mt-0">
-            <button
-              onClick={() => setPage(() => page - 1)}
-              disabled={disablePrevButton}
-              className="py-2 px-4 text-sm font-medium text-white bg-gray-800 rounded-l hover: dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              Prev
-            </button>
-            <button
-              onClick={() => setPage(() => page + 1)}
-              disabled={disableNextButton}
-              className="py-2 px-4 text-sm font-medium text-white bg-gray-800 rounded-r border-0 border-l border-gray-700 hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              Next
-            </button>
-          </div>
+        <div className="absolute top-36 right-14 hidden md:inline-block">
+          <DateRangePicker
+            value={sortOrder.dateRange}
+            placeholder="Select Date Range"
+            placement="bottomEnd"
+            onOk={(value) =>
+              setSortOrder({
+                ...sortOrder,
+                dateRange: value,
+              })
+            }
+            onClean={(e) =>
+              setSortOrder({
+                ...sortOrder,
+                dateRange: null,
+              })
+            }
+          />
         </div>
       )}
 
+      <TradeTable
+        {...{
+          trades,
+          hasDataLoaded,
+          selectTradeToDelete,
+          setSelectTradeToDelete,
+          sortOrder,
+          setSortOrder,
+        }}
+      />
+      {trades.length > 0 && (
+        <Pagination
+          total={totalTrades}
+          prev={true}
+          next={true}
+          first={windowSize.width > tableBreakPoint ? true : false}
+          last={windowSize.width > tableBreakPoint ? true : false}
+          limit={limit}
+          onChangeLimit={setLimit}
+          limitOptions={[25, 50, 100]}
+          activePage={activePage}
+          onChangePage={setActivePage}
+          layout={
+            windowSize.width > mobileBreakPoint
+              ? ["total", "-", "limit", "|", "pager", "skip"]
+              : ["pager", "limit"]
+          }
+          maxButtons={5}
+        />
+      )}
       <DrawerView
         user={user}
         open={showDrawer}
@@ -146,3 +164,9 @@ export async function getServerSideProps({ req }) {
   }
   return { props: { user } };
 }
+
+/**
+ *TODO: Refactor Delete Trade Functionality to be cleaner and easier to understand
+ *TODO: Create Search Functionality to get Trades by Symbol Name
+ *
+ */

@@ -30,6 +30,19 @@
 .rs-calendar-btn-close {
   background-color: #292d33;
 }
+.rs-picker-select-menu-item {
+  color: white;
+}
+
+@media only screen and (max-width: 425px) {
+  .rs-pagination-group {
+    flex-wrap: wrap;
+  }
+
+  .rs-pagination-group > *:first-child {
+    margin-bottom: 20px;
+  }
+}
 
 @layer base {
   body {
@@ -41,5 +54,9 @@
 @layer components {
   .loginButton {
     @apply text-sm hover:bg-gray-500 max-w-max max-h-8 focus:bg-green-500  py-1.5 px-4 transition-colors;
+  }
+
+  .tableHeader {
+    @apply text-sm font-bold text-white px-6 py-4 text-left relative;
   }
 }

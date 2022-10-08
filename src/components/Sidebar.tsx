@@ -3,14 +3,16 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import {
   RobotLogo,
+  HomeIcon,
   SideBarToggleIcon,
   ReportIcon,
   AnalyticsIcon,
 } from "./icons";
 import { useWindowSize } from "../hooks/useWindowSize";
+import { tableBreakPoint } from "../constants";
 
 const menuItems = [
-  { id: 1, label: "Home", icon: RobotLogo, link: "/" },
+  { id: 1, label: "Home", icon: HomeIcon, link: "/" },
   { id: 2, label: "View Trades", icon: ReportIcon, link: "/trades" },
   {
     id: 3,
@@ -25,10 +27,9 @@ const Sidebar = () => {
   const [isCollapsible, setIsCollapsible] = useState(false);
   const router = useRouter();
   const windowSize = useWindowSize();
-  const mobileBreakPoint = 425;
 
   useEffect(() => {
-    if (windowSize.width <= mobileBreakPoint) {
+    if (windowSize.width <= tableBreakPoint) {
       setToggleCollapse(true);
     }
   }, [toggleCollapse, windowSize.width]);
