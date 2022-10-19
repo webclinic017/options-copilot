@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import Layout from "../../components/Layout";
-import { useTrades } from "../../hooks/useTrades";
 import { supabase } from "../../utils/supabaseClient";
 import TradeTable from "../../components/TradeTable";
 import ButtonFileUpload from "../../components/ButtonFileUpload";
 import DrawerView from "../../components/DrawerView";
-import { ManualTrade } from "../../interfaces/trade";
 import {
   EMPTY_SELECTOR_STATE,
   mobileBreakPoint,
@@ -16,9 +14,11 @@ import useTradeFilters from "../../hooks/useTradeFilters";
 import DateRangePicker from "rsuite/DateRangePicker";
 import Pagination from "rsuite/Pagination";
 import { useWindowSize } from "../../hooks/useWindowSize";
+import { useGetTrades } from "../../hooks/TradeHooks/useGetTrades";
+import Image from "next/image";
+import { useDeleteTrades } from "../../hooks/TradeHooks/useDeleteTrades";
 
 const trades = ({ user }) => {
-  const [hasDataLoaded, setDataLoaded] = useState(true);
   const [showDrawer, setShowDrawer] = useState(false);
   const [selectTradeToDelete, setSelectTradeToDelete] = useState<
     number | number[]
@@ -28,7 +28,7 @@ const trades = ({ user }) => {
 
   const { sortOrder, setSortOrder } = useTradeFilters();
 
-  const { trades, setTrades, addTrade, deleteTrades, totalTrades } = useTrades({
+  const { data, isLoading } = useGetTrades({
     sortName: sortOrder.name,
     sortAsc: sortOrder.ascending,
     filterByDateRange: sortOrder.dateRange,
@@ -36,32 +36,24 @@ const trades = ({ user }) => {
     maxPageSize: limit,
   });
 
-  const handleSubmit = async (formData: ManualTrade | ManualTrade[]) => {
-    setDataLoaded(false);
-    try {
-      const data = await addTrade(formData);
-
-      if (data) {
-        setTrades(data);
-        setShowDrawer(false);
-        setSortOrder({
-          ...sortOrder,
-          dateRange: null,
-        });
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-    setDataLoaded(true);
-  };
+  const { mutate } = useDeleteTrades();
 
   const deleteTrade = async (data: number | number[]) => {
     if (!data) return;
+    const dateToDelete: [string, number] =
+      typeof data === "object" ? ["user_id", user.id] : ["id", data];
+    mutate(dateToDelete);
 
-    deleteTrades(
-      typeof data === "object" ? ["user_id", user.id] : ["id", data]
-    );
     setSelectTradeToDelete(EMPTY_SELECTOR_STATE);
+  };
+
+  const handleDatePicker = (value: [Date, Date]) => {
+    setActivePage(1);
+
+    setSortOrder({
+      ...sortOrder,
+      dateRange: value,
+    });
   };
 
   const windowSize = useWindowSize();
@@ -77,7 +69,7 @@ const trades = ({ user }) => {
           >
             Add Trade
           </button>
-          <ButtonFileUpload user={user} handleUpload={handleSubmit} />
+          <ButtonFileUpload user={user} />
         </div>
       </div>
       {selectTradeToDelete != EMPTY_SELECTOR_STATE && (
@@ -90,19 +82,13 @@ const trades = ({ user }) => {
           </button>
         </div>
       )}
-
-      {trades.length > 0 && (
+      {data?.trades.length > 0 && (
         <div className="absolute top-36 right-14 hidden md:inline-block">
           <DateRangePicker
             value={sortOrder.dateRange}
             placeholder="Select Date Range"
             placement="bottomEnd"
-            onOk={(value) =>
-              setSortOrder({
-                ...sortOrder,
-                dateRange: value,
-              })
-            }
+            onOk={(value: [Date, Date]) => handleDatePicker(value)}
             onClean={(e) =>
               setSortOrder({
                 ...sortOrder,
@@ -112,26 +98,44 @@ const trades = ({ user }) => {
           />
         </div>
       )}
-
-      <TradeTable
-        {...{
-          trades,
-          hasDataLoaded,
-          selectTradeToDelete,
-          setSelectTradeToDelete,
-          sortOrder,
-          setSortOrder,
-        }}
-      />
-      {trades.length > 0 && (
+      {data?.trades && !isLoading ? (
+        <TradeTable
+          {...{
+            trades: data.trades,
+            isLoading,
+            selectTradeToDelete,
+            setSelectTradeToDelete,
+            sortOrder,
+            setSortOrder,
+          }}
+        />
+      ) : (
+        <div className=" flex flex-col items-center -space-y-10 ">
+          <Image
+            className="rounded-xl"
+            // src="/DataLoadingIllustration.svg"
+            // Image coming from React Suites Js
+            src="https://rsuitejs.com/images/error-404.svg"
+            alt="me"
+            layout="fixed"
+            width={400}
+            height={500}
+          />
+          <div className="animate-pulse">Searching...</div>
+        </div>
+      )}
+      {data?.trades.length > 0 && (
         <Pagination
-          total={totalTrades}
+          total={data.count}
           prev={true}
           next={true}
           first={windowSize.width > tableBreakPoint ? true : false}
           last={windowSize.width > tableBreakPoint ? true : false}
           limit={limit}
-          onChangeLimit={setLimit}
+          onChangeLimit={(limit: number) => {
+            setLimit(limit);
+            setActivePage(1);
+          }}
           limitOptions={[25, 50, 100]}
           activePage={activePage}
           onChangePage={setActivePage}
@@ -146,7 +150,6 @@ const trades = ({ user }) => {
       <DrawerView
         user={user}
         open={showDrawer}
-        handleModalSubmit={(data: ManualTrade) => handleSubmit(data)}
         onClose={() => setShowDrawer(false)}
       />
     </Layout>

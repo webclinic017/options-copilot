@@ -1,15 +1,16 @@
 import React from "react";
 import { useCSVReader } from "react-papaparse";
-import { csvData, ManualTrade } from "../interfaces/trade";
+import { csvData } from "../interfaces/trade";
 import { User } from "@supabase/supabase-js";
+import { useAddTrades } from "../hooks/TradeHooks/useAddTrades";
 
 interface Props {
   user: User;
-  handleUpload: (data: ManualTrade[]) => Promise<void>;
 }
 
-const ButtonFileUpload = ({ user, handleUpload }: Props) => {
+const ButtonFileUpload = ({ user }: Props) => {
   const { CSVReader } = useCSVReader();
+  const { mutate } = useAddTrades();
 
   const handleOnDrop = async ({ data: fileData }) => {
     const dbData = fileData
@@ -26,8 +27,7 @@ const ButtonFileUpload = ({ user, handleUpload }: Props) => {
           date_time: filteredData.DateTime,
         };
       });
-
-    handleUpload(dbData);
+    mutate(dbData);
   };
 
   return (

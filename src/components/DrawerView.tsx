@@ -8,10 +8,14 @@ import {
   DatePicker,
   Schema,
 } from "rsuite";
+import { useAddTrades } from "../hooks/TradeHooks/useAddTrades";
 import { ManualTrade } from "../interfaces/trade";
 
 const DrawerView = (props) => {
   const { user, onClose, handleModalSubmit, ...rest } = props;
+
+  const { mutate } = useAddTrades();
+
   const { StringType, NumberType, DateType } = Schema.Types;
 
   const model = Schema.Model({
@@ -64,7 +68,7 @@ const DrawerView = (props) => {
       return;
     }
 
-    const formData = [
+    const formData: any = [
       {
         contract_id: Number(formValue.contractId),
         user_id: user.id,
@@ -94,7 +98,8 @@ const DrawerView = (props) => {
       },
     ];
 
-    handleModalSubmit(formData);
+    mutate(formData);
+    onClose();
   };
 
   const resetForm = () => {

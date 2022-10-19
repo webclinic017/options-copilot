@@ -6,7 +6,7 @@ import SortIconButton from "./SortIconButton";
 
 interface Props {
   trades: tradeData[];
-  hasDataLoaded: boolean;
+  isLoading: boolean;
   selectTradeToDelete: number | number[];
   setSelectTradeToDelete: (data: number | number[]) => void;
   sortOrder: {
@@ -19,7 +19,7 @@ interface Props {
 
 const TradeTable = ({
   trades,
-  hasDataLoaded,
+  isLoading,
   selectTradeToDelete,
   setSelectTradeToDelete,
   sortOrder,
@@ -47,7 +47,7 @@ const TradeTable = ({
     >
       <div className="overflow-x-auto max-h-[42rem] mb-5 sm:-mx-6 lg:-mx-8">
         <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-          {trades.length && hasDataLoaded ? (
+          {trades.length && !isLoading ? (
             <table className="min-w-full  ">
               <thead className="bg-gray-800 sticky top-0">
                 <tr className="">
@@ -155,24 +155,25 @@ const TradeTable = ({
                 ))}
               </tbody>
             </table>
-          ) : !trades.length && hasDataLoaded ? (
-            <div className="flex justify-center">
+          ) : trades && !isLoading ? (
+            <div className="flex flex-col items-center -space-y-10">
               <Image
-                src="/noData.svg"
+                src="https://rsuite-admin-template.vercel.app/d6adac113dc4b6b20658fd12c480f4e4.svg"
                 alt="No Data"
                 layout="fixed"
                 width={400}
                 height={500}
               />
+              <div className="animate-pulse">No Trades Found</div>
             </div>
           ) : (
-            <div className=" flex flex-col items-center -space-y-10 ">
+            <div className="flex flex-col items-center -space-y-10">
               <Image
                 className="rounded-xl"
                 // src="/DataLoadingIllustration.svg"
                 // Image coming from React Suites Js
                 src="https://rsuitejs.com/images/error-404.svg"
-                alt="me"
+                alt="Loading"
                 layout="fixed"
                 width={400}
                 height={500}

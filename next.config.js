@@ -1,5 +1,5 @@
 module.exports = {
   images: {
-    domains: ["rsuitejs.com"],
+    domains: ["rsuitejs.com", "rsuite-admin-template.vercel.app"],
   },
 };
