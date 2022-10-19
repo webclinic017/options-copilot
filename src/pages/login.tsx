@@ -13,7 +13,7 @@ interface Inputs {
 const Login = () => {
   const [isSigningIn, setIsSigningIn] = useState(true);
   const router = useRouter();
-  const [login, setLogin] = useState(false);
+  const [login, setLogin] = useState(true);
   const { signIn, signUp } = useAuth();
   const {
     register,
@@ -25,9 +25,9 @@ const Login = () => {
   const watchPassword = watch("password");
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
     if (login) {
-      signIn(email, password);
+      await signIn(email, password);
     } else {
-      signUp(email, password);
+      await signUp(email, password);
     }
   };
 

@@ -1,15 +1,18 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {
   RobotLogo,
+  HomeIcon,
   SideBarToggleIcon,
   ReportIcon,
   AnalyticsIcon,
 } from "./icons";
+import { useWindowSize } from "../hooks/useWindowSize";
+import { tableBreakPoint } from "../constants";
 
 const menuItems = [
-  { id: 1, label: "Home", icon: RobotLogo, link: "/" },
+  { id: 1, label: "Home", icon: HomeIcon, link: "/" },
   { id: 2, label: "View Trades", icon: ReportIcon, link: "/trades" },
   {
     id: 3,
@@ -23,6 +26,14 @@ const Sidebar = () => {
   const [toggleCollapse, setToggleCollapse] = useState(false);
   const [isCollapsible, setIsCollapsible] = useState(false);
   const router = useRouter();
+  const windowSize = useWindowSize();
+
+  useEffect(() => {
+    if (windowSize.width <= tableBreakPoint) {
+      setToggleCollapse(true);
+    }
+  }, [toggleCollapse, windowSize.width]);
+
   const onMouseOver = (showIcon: boolean) => {
     setIsCollapsible(showIcon);
   };
@@ -32,10 +43,8 @@ const Sidebar = () => {
   };
 
   const activeMenu = useMemo(() => {
-    return menuItems.find((menu) => menu.link === router.pathname);
+    return menuItems.find((menu) => menu.link === router.pathname) ?? { id: 0 };
   }, [router.pathname]);
-
-  console.log(toggleCollapse, isCollapsible, activeMenu);
 
   return (
     <div
@@ -58,7 +67,7 @@ const Sidebar = () => {
             </div>
 
             <span
-              className="mt-2 text-lg font-medium text-text"
+              className="mt-2 text-lg font-bold text-white"
               hidden={toggleCollapse}
             >
               Options Co-Pilot
@@ -93,7 +102,7 @@ const Sidebar = () => {
                     </div>
                     {!toggleCollapse && (
                       <span
-                        className={`text-md  font-medium ${
+                        className={`text-md  font-bold ${
                           activeMenu.id === menu.id
                             ? "text-blue-300"
                             : " text-white"
