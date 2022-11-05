@@ -10,14 +10,14 @@ export interface csvData {
 
 export interface tradeData {
   contract_id: number;
-  date_time: String;
+  date_time: string;
   description: string;
   id: number;
   pnl_realized: number;
   quantity: number;
-  symbol: String;
+  symbol: string;
   trade_price: number;
-  user_id: String;
+  user_id: string;
 }
 
 export interface ManualTrade {

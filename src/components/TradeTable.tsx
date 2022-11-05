@@ -3,6 +3,7 @@ import React from "react";
 import { EMPTY_SELECTOR_STATE } from "../constants";
 import { tradeData } from "../interfaces/trade";
 import SortIconButton from "./SortIconButton";
+import { useRouter } from "next/router";
 
 interface Props {
   trades: tradeData[];
@@ -25,6 +26,8 @@ const TradeTable = ({
   sortOrder,
   setSortOrder,
 }: Props) => {
+  const router = useRouter();
+
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const contractId = Number(event.target.value);
 
@@ -37,6 +40,22 @@ const TradeTable = ({
     event.target.checked
       ? setSelectTradeToDelete(trades.map((trade) => trade.id))
       : setSelectTradeToDelete(EMPTY_SELECTOR_STATE);
+  };
+
+  const handleTradeSelected = (trade: tradeData) => {
+    const selectedDate = new Date(trade.date_time);
+    const dateUrlFormat = `${selectedDate.getFullYear()}-${
+      selectedDate.getMonth() + 1
+    }-${selectedDate.getDate()}`;
+
+    router.push({
+      pathname: `/trades/[symbol]`,
+      query: {
+        symbol: trade.symbol,
+        contract_id: trade.contract_id,
+        date_time: dateUrlFormat,
+      },
+    });
   };
 
   return (
@@ -106,6 +125,7 @@ const TradeTable = ({
                   <tr
                     key={index}
                     className=" bg-gray-900 border-b border-gray-700 transition duration-300 ease-in-out hover:bg-gray-800 cursor-pointer"
+                    onDoubleClick={() => handleTradeSelected(trade)}
                   >
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white text-center">
                       <input
