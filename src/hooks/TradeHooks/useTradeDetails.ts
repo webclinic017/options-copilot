@@ -1,4 +1,5 @@
 import { useQueries } from "@tanstack/react-query";
+import { timeToLocal } from "../../utils/helper";
 import { supabase } from "../../utils/supabaseClient";
 
 export const useTradeDetails = (
@@ -92,8 +93,12 @@ const fetchCandles = async (symbol, date_time) => {
  */
 const transformCandleData = (data) =>
   data.t.map((unixTime: number, index: number) => {
-    return [
-      unixTime * 1000,
-      [data.o[index], data.h[index], data.l[index], data.c[index]],
-    ];
+    return {
+      time: timeToLocal(unixTime),
+      open: data.o[index],
+      high: data.h[index],
+      low: data.l[index],
+      close: data.c[index],
+      volume: data.v[index],
+    };
   });

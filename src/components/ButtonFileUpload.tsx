@@ -22,7 +22,7 @@ const ButtonFileUpload = ({ user }: Props) => {
           symbol: filteredData.UnderlyingSymbol,
           description: filteredData.Description,
           quantity: filteredData.Quantity,
-          trade_price: filteredData.TradeMoney,
+          trade_price: filteredData.TradePrice,
           pnl_realized: filteredData.FifoPnlRealized,
           date_time: filteredData.DateTime,
         };

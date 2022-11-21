@@ -49,7 +49,7 @@ const Sidebar = () => {
   return (
     <div
       className={`h-screen px-4  pt-12 pb-4 flex justify-between flex-col  bg-gray-800 ${
-        toggleCollapse ? "w-24" : "w-80"
+        toggleCollapse ? "w-24" : "w-72"
       } `}
       onMouseEnter={() => onMouseOver(true)}
       onMouseLeave={() => onMouseOver(false)}

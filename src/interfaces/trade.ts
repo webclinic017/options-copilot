@@ -4,7 +4,7 @@ export interface csvData {
   DateTime: string;
   Conid: number;
   Quantity: number;
-  TradeMoney: number;
+  TradePrice: number;
   FifoPnlRealized: number;
 }
 

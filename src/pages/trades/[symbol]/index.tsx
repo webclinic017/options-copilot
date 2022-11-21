@@ -3,14 +3,17 @@ import Layout from "../../../components/Layout";
 import { useRouter } from "next/router";
 import { fetchTradesById } from "../../../hooks/TradeHooks/useTradeDetails";
 import { supabase } from "../../../utils/supabaseClient";
-
 import { useTradeDetails } from "../../../hooks/TradeHooks/useTradeDetails";
+import dynamic from "next/dynamic";
+
+const CandleStick = dynamic(
+  () => import("../../../components/TradingView/CandleStick"),
+  { ssr: false }
+);
 
 const TradeDetails = ({ initialTradeData }) => {
   const router = useRouter();
   const { contract_id, date_time, symbol } = router.query;
-
-  // const avgContractPrice = data.trades[0].trade_price / data.trades[0].quantity;
 
   const results = useTradeDetails(
     symbol,
@@ -21,7 +24,7 @@ const TradeDetails = ({ initialTradeData }) => {
 
   const [stockInfo, tradeInfo, candleInfo] = results;
   const { data: stockData } = stockInfo;
-  const { data: tradeData, isLoading } = tradeInfo;
+  const { data: tradeData } = tradeInfo;
 
   const selectedDate = new Date(tradeData.trades[0].date_time);
 
@@ -40,9 +43,9 @@ const TradeDetails = ({ initialTradeData }) => {
       <button type="button" onClick={() => router.back()}>
         Click here to go back
       </button>
-      <div className="flex h-[40rem]">
-        <div className="bg-black/40 flex-auto w-[40%] lg:w-[30%] px-5">
-          <div className="text-sm flex justify-between mt-5">
+      <div className="flex flex-col lg:flex-row h-[38rem]">
+        <div className="bg-gray-800/80 flex-auto min-w-[22rem] px-5">
+          <div className="text-xs flex justify-between mt-5">
             Symbol
             <span>Last</span>
           </div>
@@ -57,8 +60,8 @@ const TradeDetails = ({ initialTradeData }) => {
           </div>
 
           <div className="text-base mt-5 flex justify-between">
-            <span>Contract Desc</span>
-            {tradeData.trades[0].description}
+            <div>Contract Desc</div>
+            <span>{tradeData.trades[0].description}</span>
           </div>
 
           <div className="mt-2 text-base flex justify-between">
@@ -93,17 +96,21 @@ const TradeDetails = ({ initialTradeData }) => {
           <div className="mt-2 text-base flex justify-between">Mistakes</div>
           <div className="mt-2 text-base flex justify-between">Custom</div>
         </div>
-
-        <div className="bg-green-500/40 flex-auto w-[60%] lg:w-[70%]">
-          Chart Screen
-        </div>
+        {candleInfo.data && (
+          <div className="order-first md:order-last">
+            <CandleStick
+              tradeData={tradeInfo.data.trades}
+              candleData={candleInfo.data}
+            />
+          </div>
+        )}
       </div>
     </Layout>
   );
 };
 
 export async function getServerSideProps({ req, query }) {
-  const { contract_id, date_time, symbol } = query;
+  const { contract_id, date_time } = query;
   const { user } = await supabase.auth.api.getUserByCookie(req);
 
   const initialTradeData = await fetchTradesById(
