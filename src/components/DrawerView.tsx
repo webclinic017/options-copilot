@@ -8,7 +8,7 @@ import {
   DatePicker,
   Schema,
 } from "rsuite";
-import { useAddTrades } from "../hooks/TradeHooks/useAddTrades";
+import { useAddTrades } from "../hooks/Trade/useAddTrades";
 import { ManualTrade } from "../interfaces/trade";
 
 const DrawerView = (props) => {

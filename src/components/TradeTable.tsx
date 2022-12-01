@@ -64,7 +64,7 @@ const TradeTable = ({
         selectTradeToDelete == EMPTY_SELECTOR_STATE ? "mt-28" : "mt-5"
       }`}
     >
-      <div className="overflow-x-auto max-h-[42rem] mb-5 sm:-mx-6 lg:-mx-8">
+      <div className="overflow-x-auto max-h-[42rem] mb-5 sm:-mx-6 lg:-mx-8 select-none">
         <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
           {trades.length && !isLoading ? (
             <table className="min-w-full  ">

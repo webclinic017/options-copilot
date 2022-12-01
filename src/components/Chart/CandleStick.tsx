@@ -27,7 +27,7 @@ const CandleStick = (props: CandleStickProps) => {
   useEffect(() => {
     const chart = createChart(chartRef.current, {
       width: 1000,
-      height: 600,
+      height: 715,
       crosshair: {
         mode: 0,
       },
@@ -63,10 +63,10 @@ const CandleStick = (props: CandleStickProps) => {
     const candleSeries = chart.addCandlestickSeries();
     candleSeries.setData(props.candleData);
 
+    //Refactor this to change number 60 to Constant for clarification
     const markers: SeriesMarker<Time>[] = props.tradeData.map((trade) => ({
-      time: timeToLocal(
-        new Date(trade.date_time).getTime() / 1000
-      ) as UTCTimestamp,
+      time: (timeToLocal(new Date(trade.date_time).getTime() / 1000) -
+        60) as UTCTimestamp,
       position: trade.quantity > 0 ? "belowBar" : "aboveBar",
       color: trade.quantity > 0 ? "#071de09a" : "#ef5350",
       shape: trade.quantity > 0 ? "arrowUp" : "arrowDown",
@@ -82,7 +82,6 @@ const CandleStick = (props: CandleStickProps) => {
       if (!param.point) {
         return;
       }
-
       const chartHoverData = props.candleData.find((x) => x.time == param.time);
       if (chartHoverData) {
         const hoverStr = `O: ${chartHoverData.open} H: ${chartHoverData.high} L: ${chartHoverData.low} C: ${chartHoverData.close}`;

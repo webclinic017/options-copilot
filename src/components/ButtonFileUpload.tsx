@@ -2,7 +2,7 @@ import React from "react";
 import { useCSVReader } from "react-papaparse";
 import { csvData } from "../interfaces/trade";
 import { User } from "@supabase/supabase-js";
-import { useAddTrades } from "../hooks/TradeHooks/useAddTrades";
+import { useAddTrades } from "../hooks/Trade/useAddTrades";
 
 interface Props {
   user: User;

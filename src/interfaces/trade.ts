@@ -30,3 +30,10 @@ export interface ManualTrade {
   closeTradePrice: number;
   quantity: number;
 }
+
+export interface TradeTag {
+  value: string;
+  label: string;
+  tag_type: string;
+  tag_id: number;
+}

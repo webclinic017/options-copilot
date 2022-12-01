@@ -6,7 +6,9 @@ export const useTradeDetails = (
   symbol,
   contract_id,
   date_time,
-  initialTradeData
+  initialTradeData,
+  tradeTags,
+  contractTradeTags
 ) => {
   const user = supabase.auth.user();
   return useQueries({
@@ -26,14 +28,59 @@ export const useTradeDetails = (
         queryFn: () => fetchCandles(symbol, date_time),
         select: transformCandleData,
       },
+      {
+        queryKey: ["tradeTags"],
+        queryFn: () => fetchTradeTags(user.id),
+        keepPreviousData: true,
+        initialData: tradeTags,
+      },
+      {
+        queryKey: ["tradeTagsByContract", contract_id, date_time],
+        queryFn: () =>
+          fetchTradeTagsByContract(contract_id, user.id, date_time),
+        keepPreviousData: true,
+        initialData: contractTradeTags,
+      },
     ],
   });
+};
+
+export const fetchTradeTagsByContract = async (
+  contract_id: number,
+  user_id: string,
+  contract_date: string
+) => {
+  const { data, error } = await supabase
+    .from("trade_details_tags")
+    .select(`*`)
+    .eq("user_id", user_id)
+    .eq("contract_id", contract_id)
+    .eq("date", contract_date);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return { data };
+};
+
+export const fetchTradeTags = async (user_id: string) => {
+  const { data, error } = await supabase
+    .from("trade_tags")
+    .select(`*`)
+    .eq("user_id", user_id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return { data };
 };
 
 export const fetchTradesById = async (
   contract_id: string,
   date_time: Date,
-  userId: string
+  user_id: string
 ) => {
   const nextDay = new Date(date_time);
   nextDay.setDate(nextDay.getDate() + 1);
@@ -41,7 +88,7 @@ export const fetchTradesById = async (
   const { data, error, count } = await supabase
     .from("trade_records")
     .select(`*`, { count: "exact" })
-    .eq("user_id", userId)
+    .eq("user_id", user_id)
     .eq("contract_id", contract_id)
     .gte("date_time", date_time)
     .lt("date_time", nextDay.toLocaleDateString("en-US", { timeZone: "UTC" }));
@@ -79,7 +126,7 @@ const fetchCandles = async (symbol, date_time) => {
 
   const data = await (
     await fetch(
-      `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=5&from=${marketOpen}&to=${marketClose}&token=${process.env.NEXT_PUBLIC_FINNHUB_API_KEY}`
+      `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=1&from=${marketOpen}&to=${marketClose}&token=${process.env.NEXT_PUBLIC_FINNHUB_API_KEY}`
     )
   ).json();
   return data;

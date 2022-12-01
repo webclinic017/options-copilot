@@ -14,9 +14,9 @@ import useTradeFilters from "../../hooks/useTradeFilters";
 import DateRangePicker from "rsuite/DateRangePicker";
 import Pagination from "rsuite/Pagination";
 import { useWindowSize } from "../../hooks/useWindowSize";
-import { useGetTrades } from "../../hooks/TradeHooks/useGetTrades";
+import { useGetTrades } from "../../hooks/Trade/useGetTrades";
 import Image from "next/image";
-import { useDeleteTrades } from "../../hooks/TradeHooks/useDeleteTrades";
+import { useDeleteTrades } from "../../hooks/Trade/useDeleteTrades";
 
 const trades = ({ user }) => {
   const [showDrawer, setShowDrawer] = useState(false);
