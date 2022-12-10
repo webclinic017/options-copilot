@@ -1,6 +1,6 @@
 import { useQueries } from "@tanstack/react-query";
-import { timeToLocal } from "../../utils/helper";
-import { supabase } from "../../utils/supabaseClient";
+import { timeToLocal } from "@/utils/helper";
+import { supabase } from "@/utils/supabaseClient";
 
 export const useTradeDetails = (
   symbol,

@@ -1,4 +1,4 @@
-import { supabase } from "../../utils/supabaseClient";
+import { supabase } from "@/utils/supabaseClient";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(

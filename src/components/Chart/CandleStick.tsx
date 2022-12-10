@@ -5,8 +5,8 @@ import {
   Time,
   UTCTimestamp,
 } from "lightweight-charts";
-import { tradeData } from "../../interfaces/trade";
-import { timeToLocal } from "../../utils/helper";
+import { tradeData } from "@/interfaces/trade";
+import { timeToLocal } from "@/utils/helper";
 
 interface CandleStickProps {
   tradeData: tradeData[];

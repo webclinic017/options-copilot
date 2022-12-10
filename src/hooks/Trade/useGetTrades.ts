@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getPagination, getTradeRangeTime } from "../../utils/helper";
-import { supabase } from "../../utils/supabaseClient";
+import { getPagination, getTradeRangeTime } from "@/utils/helper";
+import { supabase } from "@/utils/supabaseClient";
 
 interface GetTradeParams {
   sortName: string;
@@ -77,6 +77,7 @@ export const useGetTrades = ({
     ["trades", sortName, sortAsc, filterByDateRange, pageNumber, maxPageSize],
     () => fetchTrades(sortName, sortAsc, filterByDateRange),
     {
+      refetchOnMount: true,
       keepPreviousData: true,
     }
   );

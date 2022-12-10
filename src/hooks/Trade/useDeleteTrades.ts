@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "../../utils/supabaseClient";
+import { supabase } from "@/utils/supabaseClient";
 
 const deleteTrades = async (tradeToDelete: [string, number | string]) => {
   const { data, error } = await supabase

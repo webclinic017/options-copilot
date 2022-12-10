@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "../../utils/supabaseClient";
+import { supabase } from "@/utils/supabaseClient";
 
 const addTradeDetails = async (data) => {
   const { data: tradeDetails, error: err } = await supabase

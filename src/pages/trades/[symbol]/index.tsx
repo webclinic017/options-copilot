@@ -1,20 +1,19 @@
 import React from "react";
-import Layout from "../../../components/Layout";
+import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
 import {
   fetchTradesById,
   fetchTradeTags,
   fetchTradeTagsByContract,
-} from "../../../hooks/TradeDetails/useTradeDetails";
-import { supabase } from "../../../utils/supabaseClient";
-import { useTradeDetails } from "../../../hooks/TradeDetails/useTradeDetails";
+} from "@/hooks/TradeDetails/useTradeDetails";
+import { supabase } from "@/utils/supabaseClient";
+import { useTradeDetails } from "@/hooks/TradeDetails/useTradeDetails";
 import dynamic from "next/dynamic";
-import TradeDetails from "../../../components/UI/TradeDetails";
+import TradeDetails from "@/components/UI/TradeDetails";
 
-const CandleStick = dynamic(
-  () => import("../../../components/Chart/CandleStick"),
-  { ssr: false }
-);
+const CandleStick = dynamic(() => import("@/components/Chart/CandleStick"), {
+  ssr: false,
+});
 
 const TradeDetailsPage = ({
   initialTradeData,

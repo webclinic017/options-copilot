@@ -1,22 +1,22 @@
 import React, { useState } from "react";
-import Layout from "../../components/Layout";
-import { supabase } from "../../utils/supabaseClient";
-import TradeTable from "../../components/TradeTable";
-import ButtonFileUpload from "../../components/ButtonFileUpload";
-import DrawerView from "../../components/DrawerView";
+import Layout from "@/components/Layout";
+import { supabase } from "@/utils/supabaseClient";
+import TradeTable from "@/components/TradeTable";
+import ButtonFileUpload from "@/components/ButtonFileUpload";
+import DrawerView from "@/components/DrawerView";
 import {
   EMPTY_SELECTOR_STATE,
   mobileBreakPoint,
   tableBreakPoint,
   defaultPageLimit,
-} from "../../constants";
-import useTradeFilters from "../../hooks/useTradeFilters";
+} from "@/constants/index";
+import useTradeFilters from "@/hooks/useTradeFilters";
 import DateRangePicker from "rsuite/DateRangePicker";
 import Pagination from "rsuite/Pagination";
-import { useWindowSize } from "../../hooks/useWindowSize";
-import { useGetTrades } from "../../hooks/Trade/useGetTrades";
+import { useWindowSize } from "@/hooks/useWindowSize";
+import { useGetTrades } from "@/hooks/Trade/useGetTrades";
 import Image from "next/image";
-import { useDeleteTrades } from "../../hooks/Trade/useDeleteTrades";
+import { useDeleteTrades } from "@/hooks/Trade/useDeleteTrades";
 
 const trades = ({ user }) => {
   const [showDrawer, setShowDrawer] = useState(false);
