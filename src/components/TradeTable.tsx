@@ -1,12 +1,12 @@
 import Image from "next/image";
 import React from "react";
 import { EMPTY_SELECTOR_STATE } from "../constants";
-import { tradeData } from "../interfaces/trade";
+import { TradeData } from "../interfaces/trade";
 import SortIconButton from "./SortIconButton";
 import { useRouter } from "next/router";
 
 interface Props {
-  trades: tradeData[];
+  trades: TradeData[];
   isLoading: boolean;
   selectTradeToDelete: number | number[];
   setSelectTradeToDelete: (data: number | number[]) => void;
@@ -42,7 +42,7 @@ const TradeTable = ({
       : setSelectTradeToDelete(EMPTY_SELECTOR_STATE);
   };
 
-  const handleTradeSelected = (trade: tradeData) => {
+  const handleTradeSelected = (trade: TradeData) => {
     const selectedDate = new Date(trade.date_time);
     const dateUrlFormat = `${selectedDate.getFullYear()}-${
       selectedDate.getMonth() + 1

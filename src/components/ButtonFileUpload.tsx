@@ -1,6 +1,6 @@
 import React from "react";
 import { useCSVReader } from "react-papaparse";
-import { csvData } from "../interfaces/trade";
+import { CsvData } from "../interfaces/trade";
 import { User } from "@supabase/supabase-js";
 import { useAddTrades } from "../hooks/Trade/useAddTrades";
 
@@ -14,8 +14,8 @@ const ButtonFileUpload = ({ user }: Props) => {
 
   const handleOnDrop = async ({ data: fileData }) => {
     const dbData = fileData
-      .filter((data: csvData) => data.UnderlyingSymbol)
-      .map((filteredData: csvData) => {
+      .filter((data: CsvData) => data.UnderlyingSymbol)
+      .map((filteredData: CsvData) => {
         return {
           contract_id: filteredData.Conid,
           user_id: user.id,

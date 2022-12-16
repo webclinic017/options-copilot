@@ -1,4 +1,4 @@
-export interface csvData {
+export interface CsvData {
   UnderlyingSymbol: string;
   Description: string;
   DateTime: string;
@@ -8,7 +8,7 @@ export interface csvData {
   FifoPnlRealized: number;
 }
 
-export interface tradeData {
+export interface TradeData {
   contract_id: number;
   date_time: string;
   description: string;
@@ -32,8 +32,39 @@ export interface ManualTrade {
 }
 
 export interface TradeTag {
+  name?: string;
   value: string;
   label: string;
   tag_type: string;
   tag_id: number;
+}
+
+export interface ContractTag {
+  contract_id: number;
+  date: string;
+  tag_id: number;
+  user_id: string;
+}
+
+export interface TradeDetails {
+  tradeData: {
+    trades: TradeData[];
+    count: number;
+  };
+  stockData: {
+    c: number;
+    d: number;
+    dp: number;
+    h: number;
+    l: number;
+    o: number;
+    pc: number;
+    t: number;
+  };
+  allTags: {
+    data: TradeTag[];
+  };
+  contractTags: {
+    data: ContractTag[];
+  };
 }

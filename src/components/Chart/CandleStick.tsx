@@ -5,11 +5,12 @@ import {
   Time,
   UTCTimestamp,
 } from "lightweight-charts";
-import { tradeData } from "@/interfaces/trade";
+import { TradeData } from "@/interfaces/trade";
 import { timeToLocal } from "@/utils/helper";
+import TimeFrameModal from "../Modals/TimeFrameModal";
 
 interface CandleStickProps {
-  tradeData: tradeData[];
+  tradeData: TradeData[];
   candleData: {
     time: Time;
     close: number;
@@ -18,11 +19,15 @@ interface CandleStickProps {
     open: number;
     volume: number;
   }[];
+  handleTimeFrameChange: (number: number) => void;
 }
 
 const CandleStick = (props: CandleStickProps) => {
-  const chartRef = useRef();
+  const chartRef = useRef<HTMLDivElement>();
   const [legend, setLegend] = useState("");
+  const [clickInsideToggle, setClickInsideToggle] = useState(false);
+  const [message, setMessage] = useState<null | string>();
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const chart = createChart(chartRef.current, {
@@ -94,10 +99,47 @@ const CandleStick = (props: CandleStickProps) => {
     return () => {
       chart.remove();
     };
-  }, []);
+  }, [props]);
+
+  const array = [1, 5, 15];
+
+  const handleKeyPress = (e) => {
+    if (!clickInsideToggle) setClickInsideToggle(true);
+  };
+
+  const handleModalToggle = () => {
+    setClickInsideToggle(!clickInsideToggle);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter") {
+      array.some((num) => num === parseInt(message))
+        ? (props.handleTimeFrameChange(parseInt(message)), handleModalToggle())
+        : setError(true);
+    }
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMessage(event.target.value);
+    setError(false);
+  };
+
   return (
-    <div className="relative" ref={chartRef}>
+    <div
+      className="relative"
+      ref={chartRef}
+      onKeyDown={(e) => handleKeyPress(e)}
+      tabIndex={1}
+    >
       <div className="absolute top-4 ml-3 text-black z-10">{legend}</div>
+      {clickInsideToggle && (
+        <TimeFrameModal
+          error={error}
+          message={message}
+          handleChange={handleChange}
+          handleKeyDown={handleKeyDown}
+        />
+      )}
     </div>
   );
 };

@@ -1,11 +1,16 @@
 import React from "react";
-import useTradeForm from "../../hooks/TradeDetails/useTradeForm";
-import { TradeTag } from "../../interfaces/trade";
+import useTradeForm from "@/hooks/TradeDetails/useTradeForm";
+import { TradeDetails } from "@/interfaces/trade";
 import TradeTagDropdown from "../Form/Dropdown/TradeTagDropdown";
-import { Popover, Whisper } from "rsuite";
+import { Popover, Whisper, Button } from "rsuite";
 
-const TradeDetails = ({ tradeData, stockData, tradeTags, contractTags }) => {
-  const options: TradeTag[] = tradeTags.data.map((tag) => {
+const TradeDetails = ({
+  tradeData,
+  stockData,
+  allTags,
+  contractTags,
+}: TradeDetails) => {
+  const options = allTags.data.map((tag) => {
     return {
       value: tag.name,
       label: tag.name,
@@ -14,7 +19,7 @@ const TradeDetails = ({ tradeData, stockData, tradeTags, contractTags }) => {
     };
   });
 
-  const savedTags = tradeTags.data
+  const savedTags = allTags.data
     .filter(({ tag_id: tagId }) =>
       contractTags.data.some(
         ({ tag_id: contractTagId }) => tagId === contractTagId
@@ -50,14 +55,13 @@ const TradeDetails = ({ tradeData, stockData, tradeTags, contractTags }) => {
 
   const { formData, handleDataChange, handleDataSubmit } =
     useTradeForm(savedTags);
-  const { setup, mistake, custom } = formData;
+  const { setup, mistake, custom, loading, toggle } = formData;
 
+  console.log("setup", setup);
+  console.log("mistake", mistake);
   return (
     <div className="bg-gray-800/80 flex-auto min-w-[22rem] space-y-3 px-5">
-      <div
-        className="text-xs flex justify-between mt-5"
-        onClick={() => handleDataSubmit(contractId, formattedDate, userId)}
-      >
+      <div className="text-xs flex justify-between mt-5">
         Symbol
         <span>Last</span>
       </div>
@@ -132,7 +136,7 @@ const TradeDetails = ({ tradeData, stockData, tradeTags, contractTags }) => {
             handleDataChange={handleDataChange}
           />
         </div>
-        <div className="text-base flex-column">
+        <div className="text-base flex-column pb-4">
           <p>Custom</p>
           <TradeTagDropdown
             options={options.filter((tag) => tag.tag_type === "custom")}
@@ -142,6 +146,19 @@ const TradeDetails = ({ tradeData, stockData, tradeTags, contractTags }) => {
           />
         </div>
       </div>
+
+      <Button
+        disabled={toggle}
+        appearance="primary"
+        loading={loading}
+        as={"div"}
+        block
+        onClick={() =>
+          handleDataSubmit(contractId, formattedDate, userId, savedTags)
+        }
+      >
+        Save
+      </Button>
     </div>
   );
 };

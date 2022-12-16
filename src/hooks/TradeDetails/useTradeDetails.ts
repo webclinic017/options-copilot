@@ -2,13 +2,18 @@ import { useQueries } from "@tanstack/react-query";
 import { timeToLocal } from "@/utils/helper";
 import { supabase } from "@/utils/supabaseClient";
 
+// interface Props {
+//   symbol: string;
+// }
+
 export const useTradeDetails = (
   symbol,
   contract_id,
   date_time,
   initialTradeData,
+  allTags,
   tradeTags,
-  contractTradeTags
+  timeFrame
 ) => {
   const user = supabase.auth.user();
   return useQueries({
@@ -24,22 +29,22 @@ export const useTradeDetails = (
         initialData: initialTradeData,
       },
       {
-        queryKey: ["candles", symbol, date_time],
-        queryFn: () => fetchCandles(symbol, date_time),
+        queryKey: ["candles", symbol, date_time, timeFrame],
+        queryFn: () => fetchCandles(symbol, date_time, timeFrame),
         select: transformCandleData,
       },
       {
         queryKey: ["tradeTags"],
         queryFn: () => fetchTradeTags(user.id),
         keepPreviousData: true,
-        initialData: tradeTags,
+        initialData: allTags,
       },
       {
         queryKey: ["tradeTagsByContract", contract_id, date_time],
         queryFn: () =>
           fetchTradeTagsByContract(contract_id, user.id, date_time),
         keepPreviousData: true,
-        initialData: contractTradeTags,
+        initialData: tradeTags,
       },
     ],
   });
@@ -120,13 +125,13 @@ const fetchStockInfo = async (symbol) => {
  * @return {string} date_time The string containng the selected date which is then used to get market time
  *                            Market is open from 9:30 AM EST - 4:00 PM EST (16:00 Military Time)
  */
-const fetchCandles = async (symbol, date_time) => {
+const fetchCandles = async (symbol: string, date_time: Date, timeframe = 1) => {
   const marketOpen = new Date(`${date_time} 9:30:00`).getTime() / 1000;
   const marketClose = new Date(`${date_time} 16:00:00`).getTime() / 1000;
 
   const data = await (
     await fetch(
-      `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=1&from=${marketOpen}&to=${marketClose}&token=${process.env.NEXT_PUBLIC_FINNHUB_API_KEY}`
+      `https://finnhub.io/api/v1/stock/candle?symbol=${symbol}&resolution=${timeframe}&from=${marketOpen}&to=${marketClose}&token=${process.env.NEXT_PUBLIC_FINNHUB_API_KEY}`
     )
   ).json();
   return data;

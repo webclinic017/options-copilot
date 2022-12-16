@@ -6,9 +6,9 @@ import ButtonFileUpload from "@/components/ButtonFileUpload";
 import DrawerView from "@/components/DrawerView";
 import {
   EMPTY_SELECTOR_STATE,
-  mobileBreakPoint,
-  tableBreakPoint,
-  defaultPageLimit,
+  MOBILE_BREAK_POINT,
+  TABLE_BREAK_POINT,
+  DEFAULT_PAGE_LIMIT,
 } from "@/constants/index";
 import useTradeFilters from "@/hooks/useTradeFilters";
 import DateRangePicker from "rsuite/DateRangePicker";
@@ -24,7 +24,7 @@ const trades = ({ user }) => {
     number | number[]
   >(EMPTY_SELECTOR_STATE);
   const [activePage, setActivePage] = useState(1);
-  const [limit, setLimit] = useState(defaultPageLimit);
+  const [limit, setLimit] = useState(DEFAULT_PAGE_LIMIT);
 
   const { sortOrder, setSortOrder } = useTradeFilters();
 
@@ -129,8 +129,8 @@ const trades = ({ user }) => {
           total={data.count}
           prev={true}
           next={true}
-          first={windowSize.width > tableBreakPoint ? true : false}
-          last={windowSize.width > tableBreakPoint ? true : false}
+          first={windowSize.width > TABLE_BREAK_POINT ? true : false}
+          last={windowSize.width > TABLE_BREAK_POINT ? true : false}
           limit={limit}
           onChangeLimit={(limit: number) => {
             setLimit(limit);
@@ -140,7 +140,7 @@ const trades = ({ user }) => {
           activePage={activePage}
           onChangePage={setActivePage}
           layout={
-            windowSize.width > mobileBreakPoint
+            windowSize.width > MOBILE_BREAK_POINT
               ? ["total", "-", "limit", "|", "pager", "skip"]
               : ["pager", "limit"]
           }

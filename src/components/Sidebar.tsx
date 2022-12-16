@@ -9,7 +9,7 @@ import {
   AnalyticsIcon,
 } from "./icons";
 import { useWindowSize } from "../hooks/useWindowSize";
-import { tableBreakPoint } from "../constants";
+import { TABLE_BREAK_POINT } from "../constants";
 
 const menuItems = [
   { id: 1, label: "Home", icon: HomeIcon, link: "/" },
@@ -29,7 +29,7 @@ const Sidebar = () => {
   const windowSize = useWindowSize();
 
   useEffect(() => {
-    if (windowSize.width <= tableBreakPoint) {
+    if (windowSize.width <= TABLE_BREAK_POINT) {
       setToggleCollapse(true);
     }
   }, [toggleCollapse, windowSize.width]);
