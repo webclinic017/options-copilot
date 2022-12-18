@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import Layout from "@/components/Layout";
+import React from "react";
 import { useRouter } from "next/router";
+import Layout from "@/components/Layout";
+import { supabase } from "@/utils/supabaseClient";
 import {
+  useTradeDetails,
   fetchTradesById,
   fetchTradeTags,
   fetchTradeTagsByContract,
 } from "@/hooks/TradeDetails/useTradeDetails";
-import { supabase } from "@/utils/supabaseClient";
-import { useTradeDetails } from "@/hooks/TradeDetails/useTradeDetails";
 import dynamic from "next/dynamic";
 import TradeDetails from "@/components/UI/TradeDetails";
 import { TradeTag, ContractTag } from "@/interfaces/trade";
@@ -25,7 +25,6 @@ const TradeDetailsPage = ({
   allTags: TradeTag;
   tradeTags: ContractTag;
 }) => {
-  const [timeFrame, setTimeFrame] = useState(1);
   const router = useRouter();
   const { symbol, contract_id, date_time } = router.query;
 
@@ -35,13 +34,8 @@ const TradeDetailsPage = ({
     date_time,
     initialTradeData,
     allTags,
-    tradeTags,
-    timeFrame
+    tradeTags
   );
-
-  const handleTimeFrame = (timeFrame: number) => {
-    setTimeFrame(timeFrame);
-  };
 
   const [stockInfo, tradeInfo, candleInfo, allTagInfo, contractTagInfo] =
     results;
@@ -63,7 +57,6 @@ const TradeDetailsPage = ({
             <CandleStick
               tradeData={tradeInfo.data.trades}
               candleData={candleInfo.data}
-              handleTimeFrameChange={handleTimeFrame}
             />
           </div>
         )}

@@ -57,8 +57,6 @@ const TradeDetails = ({
     useTradeForm(savedTags);
   const { setup, mistake, custom, loading, toggle } = formData;
 
-  console.log("setup", setup);
-  console.log("mistake", mistake);
   return (
     <div className="bg-gray-800/80 flex-auto min-w-[22rem] space-y-3 px-5">
       <div className="text-xs flex justify-between mt-5">

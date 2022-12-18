@@ -1,10 +1,8 @@
 import { useQueries } from "@tanstack/react-query";
 import { timeToLocal } from "@/utils/helper";
 import { supabase } from "@/utils/supabaseClient";
-
-// interface Props {
-//   symbol: string;
-// }
+import { useAtomValue } from "jotai";
+import { timeFrameAtom } from "src/atoms/timeFrameAtom";
 
 export const useTradeDetails = (
   symbol,
@@ -12,10 +10,11 @@ export const useTradeDetails = (
   date_time,
   initialTradeData,
   allTags,
-  tradeTags,
-  timeFrame
+  tradeTags
 ) => {
   const user = supabase.auth.user();
+  const timeFrame = useAtomValue(timeFrameAtom);
+
   return useQueries({
     queries: [
       {

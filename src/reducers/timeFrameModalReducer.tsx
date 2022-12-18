@@ -1,26 +1,28 @@
-// import { FETCH_FAILURE, FETCH_INIT, FETCH_SUCCESS } from "../actions/actions";
+import {
+  TOGGLE_MODAL,
+  HANDLE_INTERVAL_CHANGE,
+  HANDLE_ERROR,
+} from "../actions/actions";
 
-export const dataFetchReducer = (
-  state: any,
-  action: { type: any; payload?: any }
+export const timeFrameReducer = (
+  state: { isModalOpen: boolean; data: string; isError: boolean },
+  action: { type: string; payload?: string }
 ) => {
   switch (action.type) {
-    case "TOGGLE_MODAL":
+    case TOGGLE_MODAL:
       return {
         ...state,
-        isModalOpen: true,
+        isModalOpen: !state.isModalOpen,
       };
-    case 2:
+    case HANDLE_INTERVAL_CHANGE:
       return {
         ...state,
-        isLoading: false,
-        isError: false,
         data: action.payload,
+        isError: false,
       };
-    case 3:
+    case HANDLE_ERROR:
       return {
         ...state,
-        isLoading: false,
         isError: true,
       };
     default:

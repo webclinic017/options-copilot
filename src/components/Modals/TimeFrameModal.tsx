@@ -1,11 +1,6 @@
 import React from "react";
 
-const TimeFrameModal = ({
-  error, // From Reducer
-  message, // From Reducer
-  handleChange,
-  handleKeyDown,
-}) => {
+const TimeFrameModal = ({ error, data, handleChange, handleKeyDown }) => {
   return (
     <div
       className={`flex
@@ -21,11 +16,12 @@ const TimeFrameModal = ({
         }  text-center h-10 w-44 outline-none`}
         id="message"
         name="message"
-        value={message}
+        value={data}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         autoComplete="off"
         autoFocus
+        maxLength={2}
       />
       {error && <p className="text-xs">Available numbers are 1,5,15</p>}
     </div>

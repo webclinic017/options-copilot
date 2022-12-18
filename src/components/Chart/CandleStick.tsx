@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import {
   createChart,
   SeriesMarker,
@@ -8,7 +8,15 @@ import {
 import { TradeData } from "@/interfaces/trade";
 import { timeToLocal } from "@/utils/helper";
 import TimeFrameModal from "../Modals/TimeFrameModal";
-
+import { useSetAtom } from "jotai";
+import { timeFrameAtom } from "src/atoms/timeFrameAtom";
+import { timeFrameReducer } from "src/reducers/timeFrameModalReducer";
+import {
+  HANDLE_ERROR,
+  HANDLE_INTERVAL_CHANGE,
+  TOGGLE_MODAL,
+} from "src/actions/actions";
+import { TIME_FRAMES } from "@/constants/index";
 interface CandleStickProps {
   tradeData: TradeData[];
   candleData: {
@@ -19,15 +27,26 @@ interface CandleStickProps {
     open: number;
     volume: number;
   }[];
-  handleTimeFrameChange: (number: number) => void;
 }
 
 const CandleStick = (props: CandleStickProps) => {
   const chartRef = useRef<HTMLDivElement>();
   const [legend, setLegend] = useState("");
-  const [clickInsideToggle, setClickInsideToggle] = useState(false);
-  const [message, setMessage] = useState<null | string>();
-  const [error, setError] = useState(false);
+  const [{ isModalOpen, data, isError }, dispatch] = useReducer(
+    timeFrameReducer,
+    {
+      isModalOpen: false,
+      data: "",
+      isError: false,
+    }
+  );
+
+  const {
+    ONE_MIN_TIMEFRAME,
+    FIVE_MIN_TIMEFRAME,
+    FIFTEEN_MIN_TIMEFRAME,
+    SIXTY_SECOND_TIMEFRAME,
+  } = TIME_FRAMES;
 
   useEffect(() => {
     const chart = createChart(chartRef.current, {
@@ -68,10 +87,9 @@ const CandleStick = (props: CandleStickProps) => {
     const candleSeries = chart.addCandlestickSeries();
     candleSeries.setData(props.candleData);
 
-    //Refactor this to change number 60 to Constant for clarification
     const markers: SeriesMarker<Time>[] = props.tradeData.map((trade) => ({
       time: (timeToLocal(new Date(trade.date_time).getTime() / 1000) -
-        60) as UTCTimestamp,
+        SIXTY_SECOND_TIMEFRAME) as UTCTimestamp,
       position: trade.quantity > 0 ? "belowBar" : "aboveBar",
       color: trade.quantity > 0 ? "#071de09a" : "#ef5350",
       shape: trade.quantity > 0 ? "arrowUp" : "arrowDown",
@@ -101,42 +119,42 @@ const CandleStick = (props: CandleStickProps) => {
     };
   }, [props]);
 
-  const array = [1, 5, 15];
-
-  const handleKeyPress = (e) => {
-    if (!clickInsideToggle) setClickInsideToggle(true);
-  };
-
-  const handleModalToggle = () => {
-    setClickInsideToggle(!clickInsideToggle);
+  const handleKeyPress = () => {
+    if (!isModalOpen) dispatch({ type: TOGGLE_MODAL });
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
-      array.some((num) => num === parseInt(message))
-        ? (props.handleTimeFrameChange(parseInt(message)), handleModalToggle())
-        : setError(true);
+      [ONE_MIN_TIMEFRAME, FIVE_MIN_TIMEFRAME, FIFTEEN_MIN_TIMEFRAME].some(
+        (num) => num === parseInt(data)
+      )
+        ? handleSuccess()
+        : dispatch({ type: HANDLE_ERROR });
     }
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMessage(event.target.value);
-    setError(false);
+  const setTimeFrame = useSetAtom(timeFrameAtom);
+  const handleSuccess = () => {
+    setTimeFrame(parseInt(data)), dispatch({ type: TOGGLE_MODAL });
   };
-
   return (
     <div
       className="relative"
       ref={chartRef}
-      onKeyDown={(e) => handleKeyPress(e)}
+      onKeyDown={() => handleKeyPress()}
       tabIndex={1}
     >
       <div className="absolute top-4 ml-3 text-black z-10">{legend}</div>
-      {clickInsideToggle && (
+      {isModalOpen && (
         <TimeFrameModal
-          error={error}
-          message={message}
-          handleChange={handleChange}
+          error={isError}
+          data={data}
+          handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            dispatch({
+              type: HANDLE_INTERVAL_CHANGE,
+              payload: e.target.value,
+            })
+          }
           handleKeyDown={handleKeyDown}
         />
       )}

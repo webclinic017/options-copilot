@@ -1,22 +1,29 @@
 import React, { useState } from "react";
+import Image from "next/image";
+
 import Layout from "@/components/Layout";
-import { supabase } from "@/utils/supabaseClient";
 import TradeTable from "@/components/TradeTable";
 import ButtonFileUpload from "@/components/ButtonFileUpload";
 import DrawerView from "@/components/DrawerView";
+
+import { supabase } from "@/utils/supabaseClient";
+
 import {
   EMPTY_SELECTOR_STATE,
   MOBILE_BREAK_POINT,
   TABLE_BREAK_POINT,
   DEFAULT_PAGE_LIMIT,
 } from "@/constants/index";
-import useTradeFilters from "@/hooks/useTradeFilters";
+
 import DateRangePicker from "rsuite/DateRangePicker";
 import Pagination from "rsuite/Pagination";
-import { useWindowSize } from "@/hooks/useWindowSize";
-import { useGetTrades } from "@/hooks/Trade/useGetTrades";
-import Image from "next/image";
-import { useDeleteTrades } from "@/hooks/Trade/useDeleteTrades";
+
+import {
+  useGetTrades,
+  useDeleteTrades,
+  useTradeFilters,
+  useWindowSize,
+} from "@/hooks/index";
 
 const trades = ({ user }) => {
   const [showDrawer, setShowDrawer] = useState(false);
