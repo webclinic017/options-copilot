@@ -31,6 +31,7 @@ export const useTradeDetails = (
         queryKey: ["candles", symbol, date_time, timeFrame],
         queryFn: () => fetchCandles(symbol, date_time, timeFrame),
         select: transformCandleData,
+        keepPreviousData: true,
       },
       {
         queryKey: ["tradeTags"],

@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import useTradeForm from "@/hooks/TradeDetails/useTradeForm";
-import { TradeDetails } from "@/interfaces/trade";
-import TradeTagDropdown from "../Form/Dropdown/TradeTagDropdown";
+import { TradeDetails, DeleteTagState } from "@/interfaces/trade";
+import TradeTagDropdown from "../Dropdown/TradeTagDropdown";
 import { Popover, Whisper, Button } from "rsuite";
+import { DeleteTagModal } from "@/features/tags";
 
 const TradeDetails = ({
   tradeData,
@@ -10,6 +11,10 @@ const TradeDetails = ({
   allTags,
   contractTags,
 }: TradeDetails) => {
+  const [deleteTradeTag, setDeleteTradeTag] = useState<DeleteTagState>({
+    modalToggle: false,
+    deleteTagId: null,
+  });
   const options = allTags.data.map((tag) => {
     return {
       value: tag.name,
@@ -34,11 +39,10 @@ const TradeDetails = ({
       };
     });
 
-  const selectedDate = new Date(tradeData.trades[0].date_time);
-
   const contractId = tradeData.trades[0].contract_id;
   const userId = tradeData.trades[0].user_id;
 
+  const selectedDate = new Date(tradeData.trades[0].date_time);
   const formattedDate = `${selectedDate.getFullYear()}-${
     selectedDate.getMonth() + 1
   }-${selectedDate.getDate()}`;
@@ -53,9 +57,22 @@ const TradeDetails = ({
       return acc + Math.abs(obj.quantity);
     }, 0) ?? 0;
 
+  const selectedTagToDelete = options.find(
+    (element) => element.tag_id === deleteTradeTag.deleteTagId
+  );
   const { formData, handleDataChange, handleDataSubmit } =
     useTradeForm(savedTags);
   const { setup, mistake, custom, loading, toggle } = formData;
+
+  const handleDeleteTagModalToggle = (
+    modalToggle: boolean,
+    deleteTagId: null | number
+  ) => {
+    setDeleteTradeTag({
+      modalToggle,
+      deleteTagId,
+    });
+  };
 
   return (
     <div className="bg-gray-800/80 flex-auto min-w-[22rem] space-y-3 px-5">
@@ -123,6 +140,7 @@ const TradeDetails = ({
             dropdownType="setup"
             selectedTags={setup}
             handleDataChange={handleDataChange}
+            handleDeleteTagModalToggle={handleDeleteTagModalToggle}
           />
         </div>
         <div className="text-base flex-column">
@@ -132,6 +150,7 @@ const TradeDetails = ({
             dropdownType="mistake"
             selectedTags={mistake}
             handleDataChange={handleDataChange}
+            handleDeleteTagModalToggle={handleDeleteTagModalToggle}
           />
         </div>
         <div className="text-base flex-column pb-4">
@@ -141,6 +160,7 @@ const TradeDetails = ({
             dropdownType="custom"
             selectedTags={custom}
             handleDataChange={handleDataChange}
+            handleDeleteTagModalToggle={handleDeleteTagModalToggle}
           />
         </div>
       </div>
@@ -157,6 +177,11 @@ const TradeDetails = ({
       >
         Save
       </Button>
+      <DeleteTagModal
+        deleteTradeTag={deleteTradeTag}
+        handleDeleteTagModalToggle={handleDeleteTagModalToggle}
+        selectedTagToDelete={selectedTagToDelete}
+      />
     </div>
   );
 };

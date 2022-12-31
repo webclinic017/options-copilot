@@ -11,7 +11,7 @@ import {
 import dynamic from "next/dynamic";
 import TradeDetails from "@/components/UI/TradeDetails";
 import { TradeTag, ContractTag } from "@/interfaces/trade";
-
+import ArowBackIcon from "@rsuite/icons/ArowBack";
 const CandleStick = dynamic(() => import("@/components/Chart/CandleStick"), {
   ssr: false,
 });
@@ -42,8 +42,13 @@ const TradeDetailsPage = ({
 
   return (
     <Layout>
-      <button type="button" onClick={() => router.back()}>
-        Click here to go back
+      <button
+        onClick={() => router.back()}
+        className="hover:bg-gray-700 text-white font-bold w-10 h-10 rounded inline-flex items-center duration-300"
+      >
+        <div className="ml-3">
+          <ArowBackIcon />
+        </div>
       </button>
       <div className="flex flex-col lg:flex-row h-[46rem] space-y-5">
         <TradeDetails

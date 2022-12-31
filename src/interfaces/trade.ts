@@ -68,3 +68,8 @@ export interface TradeDetails {
     data: ContractTag[];
   };
 }
+
+export interface DeleteTagState {
+  modalToggle: boolean;
+  deleteTagId: null | number;
+}

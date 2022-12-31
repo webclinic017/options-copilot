@@ -28,8 +28,6 @@ const useTradeForm = (formState: TradeTag[]) => {
     data: TradeTag[],
     type: "setup" | "mistake" | "custom"
   ) => {
-    console.log(data);
-    console.log(formData);
     setFormData({ ...formData, [type]: data, toggle: false });
   };
 
@@ -39,7 +37,6 @@ const useTradeForm = (formState: TradeTag[]) => {
     userId: string,
     savedTags: TradeTag[]
   ) => {
-    console.log("here");
     setFormData({
       ...formData,
       loading: true,
