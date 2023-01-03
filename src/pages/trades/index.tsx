@@ -64,9 +64,9 @@ const trades = ({ user }) => {
     <Layout>
       <div className="md:flex justify-between space-y-5 md:space-y-0  ">
         <div className="text-3xl font-bold text-white">Trade History</div>
-        <div className="flex space-x-3">
+        <div className="btn-group">
           <button
-            className="bg-gray-700 hover:bg-blue-400 text-white text-center font-bold py-2 px-4 rounded duration-300 w-32"
+            className="btn btn-outline"
             onClick={() => setShowDrawer(true)}
           >
             Add Trade
