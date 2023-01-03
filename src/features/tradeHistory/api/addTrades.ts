@@ -17,6 +17,7 @@ const addTrade = async (data: ManualTrade | ManualTrade[]) => {
 
 export const useAddTrades = () => {
   const queryClient = useQueryClient();
+
   return useMutation((data: ManualTrade | ManualTrade[]) => addTrade(data), {
     onSuccess: () => {
       queryClient.refetchQueries(["trades"]);

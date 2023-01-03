@@ -1,25 +1,26 @@
-import React from "react";
 import { useCSVReader } from "react-papaparse";
-import { CsvData } from "../interfaces/trade";
+
 import { User } from "@supabase/supabase-js";
-import { useAddTrades } from "../hooks/Trade/useAddTrades";
+import { CsvData } from "../types";
+import { useAddTrades } from "../api/addTrades";
+import { mergeDuplicateTrade } from "@/utils/format";
 
 interface Props {
   user: User;
 }
 
-const ButtonFileUpload = ({ user }: Props) => {
+export const CsvButtonUpload = ({ user }: Props) => {
   const { CSVReader } = useCSVReader();
   const { mutate } = useAddTrades();
 
   const handleOnDrop = async ({ data: fileData }) => {
-    const dbData = fileData
-      .filter((data: CsvData) => data.UnderlyingSymbol)
+    const incomingData = fileData
+      .filter((data: CsvData) => data.Symbol)
       .map((filteredData: CsvData) => {
         return {
           contract_id: filteredData.Conid,
           user_id: user.id,
-          symbol: filteredData.UnderlyingSymbol,
+          symbol: filteredData.Symbol.substring(0, 4).trim(),
           description: filteredData.Description,
           quantity: filteredData.Quantity,
           trade_price: filteredData.TradePrice,
@@ -27,7 +28,10 @@ const ButtonFileUpload = ({ user }: Props) => {
           date_time: filteredData.DateTime,
         };
       });
-    mutate(dbData);
+
+    // const mergedTrades = mergeDuplicateTrade(incomingData);
+    // mutate(mergedTrades)
+    mutate(mergeDuplicateTrade(incomingData));
   };
 
   return (
@@ -63,5 +67,3 @@ const ButtonFileUpload = ({ user }: Props) => {
     </CSVReader>
   );
 };
-
-export default ButtonFileUpload;
