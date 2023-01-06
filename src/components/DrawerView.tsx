@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+
 import {
   Drawer,
   Button,
@@ -8,6 +9,7 @@ import {
   DatePicker,
   Schema,
 } from "rsuite";
+
 import { useAddTrades } from "../hooks/Trade/useAddTrades";
 import { ManualTrade } from "../interfaces/trade";
 

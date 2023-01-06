@@ -1,6 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
+
 import Link from "next/link";
 import { useRouter } from "next/router";
+
+import { TABLE_BREAK_POINT } from "../constants";
+import { useWindowSize } from "../hooks/useWindowSize";
 import {
   RobotLogo,
   HomeIcon,
@@ -8,8 +12,6 @@ import {
   ReportIcon,
   AnalyticsIcon,
 } from "./icons";
-import { useWindowSize } from "../hooks/useWindowSize";
-import { TABLE_BREAK_POINT } from "../constants";
 
 const menuItems = [
   { id: 1, label: "Home", icon: HomeIcon, link: "/" },

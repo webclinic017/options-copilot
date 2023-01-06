@@ -1,17 +1,20 @@
 import React from "react";
+
+import ArowBackIcon from "@rsuite/icons/ArowBack";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+
 import Layout from "@/components/Layout";
-import { supabase } from "@/utils/supabaseClient";
+import { TradeDetails } from "@/components/UI/TradeDetails";
 import {
   useTradeDetails,
   fetchTradesById,
   fetchTradeTags,
   fetchTradeTagsByContract,
 } from "@/hooks/TradeDetails/useTradeDetails";
-import dynamic from "next/dynamic";
-import TradeDetails from "@/components/UI/TradeDetails";
 import { TradeTag, ContractTag } from "@/interfaces/trade";
-import ArowBackIcon from "@rsuite/icons/ArowBack";
+import { supabase } from "@/utils/supabaseClient";
+
 const CandleStick = dynamic(() => import("@/components/Chart/CandleStick"), {
   ssr: false,
 });

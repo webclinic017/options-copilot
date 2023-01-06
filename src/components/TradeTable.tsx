@@ -1,9 +1,11 @@
-import Image from "next/image";
 import React from "react";
+
+import Image from "next/image";
+import { useRouter } from "next/router";
+
 import { EMPTY_SELECTOR_STATE } from "../constants";
 import { TradeData } from "../interfaces/trade";
 import SortIconButton from "./SortIconButton";
-import { useRouter } from "next/router";
 
 interface Props {
   trades: TradeData[];

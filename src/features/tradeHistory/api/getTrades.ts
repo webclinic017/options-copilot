@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/utils/supabaseClient";
-import { combineDailyTrades } from "@/utils/sort";
 import { useSetAtom } from "jotai";
 import { tradeDataAtom } from "src/atoms";
+
+import { combineDailyTrades } from "@/utils/sort";
+import { supabase } from "@/utils/supabaseClient";
 
 export const useGetTrades = () => {
   const user = supabase.auth.user();

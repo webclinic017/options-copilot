@@ -1,9 +1,12 @@
 import { useEffect } from "react";
-import Modal from "rsuite/Modal";
+
 import TrashIcon from "@rsuite/icons/Trash";
 import SpinnerIcon from "@rsuite/icons/legacy/Spinner";
-import { useDeleteTag } from "../api/deleteTag";
+import Modal from "rsuite/Modal";
+
 import { DeleteTagState, TradeTag } from "@/interfaces/trade";
+
+import { useDeleteTag } from "../api/deleteTag";
 
 type DeleteTagModalProps = {
   deleteTradeTag: DeleteTagState;

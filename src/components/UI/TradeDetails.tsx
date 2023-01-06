@@ -1,16 +1,22 @@
 import React, { useState } from "react";
-import useTradeForm from "@/hooks/TradeDetails/useTradeForm";
-import { TradeDetails, DeleteTagState } from "@/interfaces/trade";
-import TradeTagDropdown from "../Dropdown/TradeTagDropdown";
-import { Popover, Whisper, Button } from "rsuite";
-import { DeleteTagModal } from "@/features/tags";
 
-const TradeDetails = ({
+import { Popover, Whisper, Button } from "rsuite";
+
+import { DeleteTagModal } from "@/features/tags";
+import useTradeForm from "@/hooks/TradeDetails/useTradeForm";
+import {
+  TradeDetails as TradeInferace,
+  DeleteTagState,
+} from "@/interfaces/trade";
+
+import TradeTagDropdown from "../Dropdown/TradeTagDropdown";
+
+export const TradeDetails = ({
   tradeData,
   stockData,
   allTags,
   contractTags,
-}: TradeDetails) => {
+}: TradeInferace) => {
   const [deleteTradeTag, setDeleteTradeTag] = useState<DeleteTagState>({
     modalToggle: false,
     deleteTagId: null,
@@ -185,5 +191,3 @@ const TradeDetails = ({
     </div>
   );
 };
-
-export default TradeDetails;

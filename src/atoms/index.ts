@@ -1,8 +1,8 @@
 import { atom } from "jotai";
 
-import { TIME_FRAMES } from "../constants";
-
 import { sortByDate } from "@/utils/sort";
+
+import { TIME_FRAMES } from "../constants";
 
 type SortType = {
   name: "symbol" | "date" | "quantity" | "trade_price" | "pnl_realized";

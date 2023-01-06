@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { supabase } from "@/utils/supabaseClient";
 
 const deleteTradeTags = async ({ contract_id, tag_id, date }) => {

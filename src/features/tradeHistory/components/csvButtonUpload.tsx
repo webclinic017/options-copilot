@@ -1,9 +1,11 @@
 import { useCSVReader } from "react-papaparse";
 
 import { User } from "@supabase/supabase-js";
-import { CsvData } from "../types";
-import { useAddTrades } from "../api/addTrades";
+
 import { mergeDuplicateTrade } from "@/utils/sort";
+
+import { useAddTrades } from "../api/addTrades";
+import { CsvData } from "../types";
 
 interface Props {
   user: User;

@@ -1,12 +1,12 @@
 import React from "react";
-import Layout from "@/components/Layout";
-import { supabase } from "@/utils/supabaseClient";
 
+import Layout from "@/components/Layout";
 import {
   CsvButtonUpload,
   TradeTable,
   useGetTrades,
 } from "@/features/tradeHistory";
+import { supabase } from "@/utils/supabaseClient";
 
 const trades = ({ user }) => {
   useGetTrades();

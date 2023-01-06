@@ -5,8 +5,10 @@ import React, {
   useEffect,
   useMemo,
 } from "react";
-import { supabase } from "../utils/supabaseClient";
+
 import { useRouter } from "next/router";
+
+import { supabase } from "../utils/supabaseClient";
 
 const AuthContext = createContext({
   user: null,

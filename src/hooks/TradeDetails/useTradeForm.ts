@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+
+import { TradeTag } from "@/interfaces/trade";
+
 import { useDeleteTradeTags } from "../TradeTags/useDeleteTradeTags";
 import { useAddTradeDetails } from "./useAddTradeDetails";
-import { TradeTag } from "@/interfaces/trade";
 
 const useTradeForm = (formState: TradeTag[]) => {
   const [formData, setFormData] = useState({

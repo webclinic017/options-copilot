@@ -1,22 +1,26 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
+
+import { useSetAtom } from "jotai";
 import {
   createChart,
   SeriesMarker,
   Time,
   UTCTimestamp,
 } from "lightweight-charts";
-import { TradeData } from "@/interfaces/trade";
-import { timeToLocal } from "@/utils/helper";
-import TimeFrameModal from "../Modals/TimeFrameModal";
-import { useSetAtom } from "jotai";
-import { timeFrameAtom } from "src/atoms";
-import { timeFrameReducer } from "src/reducers/timeFrameModalReducer";
 import {
   HANDLE_ERROR,
   HANDLE_INTERVAL_CHANGE,
   TOGGLE_MODAL,
 } from "src/actions/actions";
+import { timeFrameAtom } from "src/atoms";
+import { timeFrameReducer } from "src/reducers/timeFrameModalReducer";
+
 import { TIME_FRAMES } from "@/constants/index";
+import { TradeData } from "@/interfaces/trade";
+import { timeToLocal } from "@/utils/helper";
+
+import TimeFrameModal from "../Modals/TimeFrameModal";
+
 interface CandleStickProps {
   tradeData: TradeData[];
   candleData: {

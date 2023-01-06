@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import CreatableSelect from "react-select/creatable";
 import { components } from "react-select";
+import CreatableSelect from "react-select/creatable";
 
 import { useAddTradeTags } from "@/hooks/TradeTags/useAddTradeTags";
 

@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { ManualTrade } from "@/interfaces/trade";
 import { supabase } from "@/utils/supabaseClient";
 

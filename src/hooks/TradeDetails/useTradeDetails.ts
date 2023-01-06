@@ -1,8 +1,9 @@
 import { useQueries } from "@tanstack/react-query";
-import { timeToLocal } from "@/utils/helper";
-import { supabase } from "@/utils/supabaseClient";
 import { useAtomValue } from "jotai";
 import { timeFrameAtom } from "src/atoms";
+
+import { timeToLocal } from "@/utils/helper";
+import { supabase } from "@/utils/supabaseClient";
 
 export const useTradeDetails = (
   symbol,

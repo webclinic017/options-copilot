@@ -1,6 +1,5 @@
-import React from "react";
-import Image from "next/image";
 import { useAtom } from "jotai";
+import Image from "next/image";
 import { sortedTrades } from "src/atoms";
 
 export const TradeTable = () => {
@@ -9,7 +8,7 @@ export const TradeTable = () => {
   return (
     <div className="overflow-x-auto w-full h-[46rem] mt-10">
       {trades.length ? (
-        <table data-theme="" className="table w-full">
+        <table data-theme="" className="table table-zebra w-full">
           <thead className="">
             <tr>
               <th>
@@ -30,7 +29,11 @@ export const TradeTable = () => {
           </thead>
           <tbody>
             {trades.map((trade) => (
-              <tr key={trade.id}>
+              <tr
+                key={trade.id}
+                className="hover cursor-pointer"
+                onClick={() => alert(JSON.stringify(trade))}
+              >
                 <th>
                   <label>
                     <input type="checkbox" className="checkbox" />
