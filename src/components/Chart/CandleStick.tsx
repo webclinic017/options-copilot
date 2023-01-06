@@ -9,7 +9,7 @@ import { TradeData } from "@/interfaces/trade";
 import { timeToLocal } from "@/utils/helper";
 import TimeFrameModal from "../Modals/TimeFrameModal";
 import { useSetAtom } from "jotai";
-import { timeFrameAtom } from "src/atoms/timeFrameAtom";
+import { timeFrameAtom } from "src/atoms";
 import { timeFrameReducer } from "src/reducers/timeFrameModalReducer";
 import {
   HANDLE_ERROR,
