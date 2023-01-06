@@ -46,7 +46,6 @@
 
 @layer base {
   body {
-    @apply bg-gradient-to-b from-gray-800 via-gray-900 to-black  text-white;
     font-family: "Ubuntu", sans-serif;
   }
 }

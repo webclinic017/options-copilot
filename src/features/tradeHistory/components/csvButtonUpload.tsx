@@ -49,19 +49,23 @@ export const CsvButtonUpload = ({ user }: Props) => {
         getRemoveFileProps,
       }: any) => (
         <div>
-          <button className="btn btn-primary gap-2" {...getRootProps()}>
+          <button
+            className="btn btn-primary rounded-l-none"
+            {...getRootProps()}
+          >
             <svg
+              width="24px"
+              height="24px"
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
+              strokeWidth="2"
               stroke="currentColor"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
               />
             </svg>
 
