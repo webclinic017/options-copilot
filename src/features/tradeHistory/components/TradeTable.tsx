@@ -1,9 +1,12 @@
 import { useAtom } from "jotai";
 import Image from "next/image";
-import { sortedTrades } from "src/atoms";
+import { sortedTrades, sortType } from "src/atoms";
+
+import TradeHeader from "./TradeHeader";
 
 export const TradeTable = () => {
   const [trades] = useAtom(sortedTrades);
+  useAtom(sortType);
 
   return (
     <div className="overflow-x-auto w-full h-[46rem] mt-10">
@@ -16,14 +19,22 @@ export const TradeTable = () => {
                   <input type="checkbox" className="checkbox" />
                 </label>
               </th>
-              <th>Symbol</th>
-              <th>Date/Time</th>
               <th>
-                Volume <br />
-                Traded
+                <TradeHeader label="symbol" value="symbol" />
               </th>
-              <th>Price</th>
-              <th>PnL</th>
+              <th>
+                <TradeHeader label="Date/Time" value="date" />
+              </th>
+              <th>
+                <TradeHeader label="Volume Traded" value="quantity" />
+              </th>
+              <th>
+                <TradeHeader label="Price" value="trade_price" />
+              </th>
+              <th>
+                <TradeHeader label="PnL" value="pnl_realized" />
+              </th>
+
               <th>{trades.length}</th>
             </tr>
           </thead>
