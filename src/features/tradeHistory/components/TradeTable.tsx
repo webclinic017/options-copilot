@@ -15,11 +15,6 @@ export const TradeTable = () => {
           <thead className="">
             <tr>
               <th>
-                <label>
-                  <input type="checkbox" className="checkbox" />
-                </label>
-              </th>
-              <th>
                 <TradeHeader label="symbol" value="symbol" />
               </th>
               <th>
@@ -40,16 +35,7 @@ export const TradeTable = () => {
           </thead>
           <tbody>
             {trades.map((trade) => (
-              <tr
-                key={trade.id}
-                className="hover cursor-pointer"
-                onClick={() => alert(JSON.stringify(trade))}
-              >
-                <th>
-                  <label>
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                </th>
+              <tr key={trade.id} className="hover cursor-pointer">
                 <td>
                   {trade.symbol}
                   <br />
@@ -60,7 +46,13 @@ export const TradeTable = () => {
                 <td> {trade.date_time.replace("T", " ")}</td>
                 <td className="">{trade.quantity}</td>
                 <td>{trade.trade_price}</td>
-                <td className="text-green-500">{trade.pnl_realized}</td>
+                <td
+                  className={`${
+                    trade.pnl_realized > 0 ? "text-green-500" : "text-red-500"
+                  }`}
+                >
+                  {trade.pnl_realized != 0 && <div> {trade.pnl_realized}</div>}
+                </td>
                 <th>
                   <button className="btn btn-ghost btn-xs">View</button>
                 </th>
