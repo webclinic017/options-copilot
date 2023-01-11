@@ -16,7 +16,7 @@ const trades = ({ user }) => {
   const setTradeRange = useSetAtom(dateRangeAtom);
   const dateRangeStr = useAtomValue(dateRangeString);
 
-  useGetTrades(dateRangeStr);
+  const { data } = useGetTrades(dateRangeStr);
 
   const handleSelect = (value) => {
     setTradeRange(value);
@@ -31,9 +31,11 @@ const trades = ({ user }) => {
           <CsvButtonUpload user={user} />
         </div>
       </div>
-      <div className="absolute top-36 right-14 hidden md:inline-block">
-        <TradeDatePicker handleSelect={handleSelect} />
-      </div>
+      {!!data?.length && (
+        <div className="absolute top-36 right-14 hidden md:inline-block">
+          <TradeDatePicker handleSelect={handleSelect} />
+        </div>
+      )}
       <TradeTable />
     </Layout>
   );
