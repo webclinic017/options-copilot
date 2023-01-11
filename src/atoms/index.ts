@@ -1,5 +1,7 @@
 import { atom } from "jotai";
+import type { PrimitiveAtom } from "jotai";
 
+import { getTradeRangeTime } from "@/utils/helper";
 import { sortByDate } from "@/utils/sort";
 
 import { TIME_FRAMES } from "../constants";
@@ -29,4 +31,19 @@ export const sortedTrades = atom((get) => {
   } else sortByDate(trades);
 
   return ascending ? trades : trades.reverse();
+});
+
+type DateRangeType = {
+  value: [Date];
+};
+
+export const dateRangeAtom = atom<PrimitiveAtom<DateRangeType>[]>([]);
+
+export const dateRangeString = atom((get) => {
+  const dateRange = get(dateRangeAtom);
+  if (!dateRange.length) {
+    return null;
+  }
+  const { startDate, endDate } = getTradeRangeTime(dateRange);
+  return { startDate, endDate };
 });

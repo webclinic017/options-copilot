@@ -9,10 +9,10 @@ export const TradeTable = () => {
   useAtom(sortType);
 
   return (
-    <div className="overflow-x-auto w-full h-[46rem] mt-10">
+    <div className="overflow-x-auto w-full h-[46rem] mt-28">
       {trades.length ? (
         <table data-theme="" className="table table-zebra w-full">
-          <thead className="">
+          <thead>
             <tr>
               <th>
                 <TradeHeader label="symbol" value="symbol" />
@@ -29,8 +29,6 @@ export const TradeTable = () => {
               <th>
                 <TradeHeader label="PnL" value="pnl_realized" />
               </th>
-
-              <th>{trades.length}</th>
             </tr>
           </thead>
           <tbody>

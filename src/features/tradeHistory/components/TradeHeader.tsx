@@ -12,7 +12,7 @@ const TradeHeader = ({ value, label }: Props) => {
     setSortType({ name: value, ascending: !sort.ascending });
   return (
     <div
-      className="inline-flex w-full  items-center justify-between cursor-pointer"
+      className="inline-flex w-full  items-center justify-between cursor-pointer select-none"
       onClick={() => handleTableSort()}
     >
       {label}

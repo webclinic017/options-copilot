@@ -13,7 +13,7 @@ export const getPagination = (page: number, size: number) => {
  * @param {Date[]} dateRange Array containg date fields
  * @return {startDate, endDate}
  */
-export const getTradeRangeTime = (dateRange: Date[]) => {
+export const getTradeRangeTime = (dateRange: Array<string>) => {
   const marketHourOpen = 9;
   const marketMinuteOpen = 30;
   const marketHourClose = 16; // Militaray 24Hr Format
