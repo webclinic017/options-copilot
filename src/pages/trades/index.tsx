@@ -6,19 +6,19 @@ import { dateRangeAtom, dateRangeString } from "src/atoms";
 import Layout from "@/components/Layout";
 import {
   CsvButtonUpload,
+  TradeDatePicker,
+  TradePagination,
   TradeTable,
   useGetTrades,
 } from "@/features/tradeHistory";
-import TradeDatePicker from "@/features/tradeHistory/components/TradeDatePicker";
 import { supabase } from "@/utils/supabaseClient";
 
 const trades = ({ user }) => {
   const setTradeRange = useSetAtom(dateRangeAtom);
   const dateRangeStr = useAtomValue(dateRangeString);
-
   const { data } = useGetTrades(dateRangeStr);
 
-  const handleSelect = (value) => {
+  const handleSelectDate = (value) => {
     setTradeRange(value);
   };
 
@@ -31,12 +31,12 @@ const trades = ({ user }) => {
           <CsvButtonUpload user={user} />
         </div>
       </div>
-      {!!data?.length && (
-        <div className="absolute top-36 right-14 hidden md:inline-block">
-          <TradeDatePicker handleSelect={handleSelect} />
-        </div>
-      )}
+      <div className="absolute top-36 right-14 hidden md:inline-block">
+        <TradeDatePicker selectDate={handleSelectDate} />
+      </div>
+
       <TradeTable />
+      {!!data?.length && <TradePagination totalTrades={data.length} />}
     </Layout>
   );
 };
@@ -52,9 +52,3 @@ export async function getServerSideProps({ req }) {
   }
   return { props: { user } };
 }
-
-/**
- *TODO: Refactor Delete Trade Functionality to be cleaner and easier to understand
- *TODO: Create Search Functionality to get Trades by Symbol Name
- *
- */

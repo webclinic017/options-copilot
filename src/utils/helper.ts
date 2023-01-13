@@ -1,7 +1,9 @@
-export const getPagination = (page: number, size: number) => {
-  const pageStart = page ? (page - 1) * size : 0;
+import { PAGE_LIMIT } from "../constants";
 
-  const pageEnd = page ? page * size - 1 : size;
+export const getPagination = (page: number, limit = PAGE_LIMIT) => {
+  const pageStart = page ? (page - 1) * limit : 0;
+
+  const pageEnd = page ? page * limit - 1 : limit;
 
   return { pageStart, pageEnd };
 };
@@ -13,7 +15,7 @@ export const getPagination = (page: number, size: number) => {
  * @param {Date[]} dateRange Array containg date fields
  * @return {startDate, endDate}
  */
-export const getTradeRangeTime = (dateRange: Array<string>) => {
+export const getTradeRangeTime = (dateRange: Array<string | number | Date>) => {
   const marketHourOpen = 9;
   const marketMinuteOpen = 30;
   const marketHourClose = 16; // Militaray 24Hr Format

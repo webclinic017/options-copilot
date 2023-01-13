@@ -2,15 +2,16 @@ import React from "react";
 
 import { DateRangePicker } from "rsuite";
 
-const TradeDatePicker = (props) => (
+interface Props {
+  selectDate: (value: any) => void;
+}
+
+export const TradeDatePicker = ({ selectDate }: Props) => (
   <DateRangePicker
     placeholder="Select Date Range"
     placement="bottomEnd"
-    onOk={(value: [Date, Date]) => props.handleSelect(value)}
-    onClean={() => props.handleSelect([])}
+    onOk={(value: [Date, Date]) => selectDate(value)}
+    onClean={() => selectDate([])}
     showOneCalendar
-    {...props}
   />
 );
-
-export default TradeDatePicker;

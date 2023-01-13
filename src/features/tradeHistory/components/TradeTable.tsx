@@ -1,15 +1,15 @@
 import { useAtom } from "jotai";
 import Image from "next/image";
-import { sortedTrades, sortType } from "src/atoms";
+import { sortType, paginatedTrades } from "src/atoms";
 
 import TradeHeader from "./TradeHeader";
 
 export const TradeTable = () => {
-  const [trades] = useAtom(sortedTrades);
+  const [trades] = useAtom(paginatedTrades);
   useAtom(sortType);
 
   return (
-    <div className="overflow-x-auto w-full h-[46rem] mt-28">
+    <div className="overflow-x-auto w-full  max-h-[46rem] mt-28 mb-5">
       {trades.length ? (
         <table data-theme="" className="table table-zebra w-full">
           <thead>
@@ -49,7 +49,9 @@ export const TradeTable = () => {
                     trade.pnl_realized > 0 ? "text-green-500" : "text-red-500"
                   }`}
                 >
-                  {trade.pnl_realized != 0 && <div> {trade.pnl_realized}</div>}
+                  {trade.pnl_realized != 0 && (
+                    <div> {trade.pnl_realized.toFixed(2)}</div>
+                  )}
                 </td>
                 <th>
                   <button className="btn btn-ghost btn-xs">View</button>

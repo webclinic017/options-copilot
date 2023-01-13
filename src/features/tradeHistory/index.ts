@@ -1,4 +1,3 @@
-export * from "./components/CsvButtonUpload";
-export * from "./components/TradeTable";
+export * from "./components";
 export * from "./types";
 export * from "./api/getTrades";

@@ -13,3 +13,5 @@ export const TIME_FRAMES = {
   FIFTEEN_MIN_TIMEFRAME: 15,
   SIXTY_SECOND_TIMEFRAME: 60,
 };
+
+export const PAGE_LIMIT = 25;

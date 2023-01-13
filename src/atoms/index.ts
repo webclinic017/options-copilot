@@ -1,7 +1,6 @@
 import { atom } from "jotai";
-import type { PrimitiveAtom } from "jotai";
 
-import { getTradeRangeTime } from "@/utils/helper";
+import { getPagination, getTradeRangeTime } from "@/utils/helper";
 import { sortByDate } from "@/utils/sort";
 
 import { TIME_FRAMES } from "../constants";
@@ -14,6 +13,7 @@ type SortType = {
 export const timeFrameAtom = atom(TIME_FRAMES.ONE_MIN_TIMEFRAME);
 
 export const tradeDataAtom = atom([]);
+export const tradePageAtom = atom(1);
 
 export const sortType = atom<SortType>({
   name: "date",
@@ -33,11 +33,17 @@ export const sortedTrades = atom((get) => {
   return ascending ? trades : trades.reverse();
 });
 
-type DateRangeType = {
-  value: [Date];
-};
+export const paginatedTrades = atom((get) => {
+  const trades = get(sortedTrades);
+  //observes changes on sortType
+  get(sortType);
 
-export const dateRangeAtom = atom<PrimitiveAtom<DateRangeType>[]>([]);
+  const currentPage = get(tradePageAtom);
+  const { pageStart, pageEnd } = getPagination(currentPage);
+  return trades.filter((_, index) => index >= pageStart && index <= pageEnd);
+});
+
+export const dateRangeAtom = atom([]);
 
 export const dateRangeString = atom((get) => {
   const dateRange = get(dateRangeAtom);
