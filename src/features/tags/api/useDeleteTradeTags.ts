@@ -28,8 +28,11 @@ const deleteTradeTags = async ({ contract_id, tag_id, date }) => {
 export const useDeleteTradeTags = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    (data: { contract_id: number; tag_id: number; date: string | string[] }) =>
-      deleteTradeTags(data),
+    (data: {
+      contract_id: number | string | string[];
+      tag_id: number;
+      date: string | string[];
+    }) => deleteTradeTags(data),
     {
       onSuccess: () => {
         queryClient.refetchQueries(["tradeTagsByContract"]);

@@ -1,12 +1,33 @@
 import { useAtom } from "jotai";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { sortType, paginatedTrades } from "src/atoms";
+
+import { TradeData } from "@/interfaces/trade";
 
 import TradeHeader from "./TradeHeader";
 
 export const TradeTable = () => {
+  const router = useRouter();
   const [trades] = useAtom(paginatedTrades);
+
   useAtom(sortType);
+
+  const handleTradeSelected = (trade: TradeData) => {
+    const selectedDate = new Date(trade.date_time);
+    const dateUrlFormat = `${selectedDate.getFullYear()}-${
+      selectedDate.getMonth() + 1
+    }-${selectedDate.getDate()}`;
+
+    router.push({
+      pathname: `/trades/[symbol]`,
+      query: {
+        symbol: trade.symbol,
+        contract_id: trade.contract_id,
+        date_time: dateUrlFormat,
+      },
+    });
+  };
 
   return (
     <div className="overflow-x-auto w-full  max-h-[46rem] mt-28 mb-5">
@@ -29,6 +50,8 @@ export const TradeTable = () => {
               <th>
                 <TradeHeader label="PnL" value="pnl_realized" />
               </th>
+              {/* styling purposes */}
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -53,7 +76,7 @@ export const TradeTable = () => {
                     <div> {trade.pnl_realized.toFixed(2)}</div>
                   )}
                 </td>
-                <th>
+                <th onClick={() => handleTradeSelected(trade)}>
                   <button className="btn btn-ghost btn-xs">View</button>
                 </th>
               </tr>

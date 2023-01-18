@@ -22,7 +22,7 @@ export const useAddTradeDetails = () => {
   return useMutation(
     (
       data: {
-        contract_id: number;
+        contract_id: number | string | string[];
         date: string;
         user_id: string;
         tag_id: number;

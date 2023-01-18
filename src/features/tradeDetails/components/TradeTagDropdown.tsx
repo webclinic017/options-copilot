@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import { components } from "react-select";
 import CreatableSelect from "react-select/creatable";
 
-import { useAddTradeTags } from "@/hooks/TradeTags/useAddTradeTags";
+import { useAddTradeTags } from "../api/useAddTradeTags";
 
-const TradeTagDropdown = ({
+export const TradeTagDropdown = ({
   options,
   dropdownType,
   selectedTags,
@@ -128,5 +128,3 @@ const TradeTagDropdown = ({
     </div>
   );
 };
-
-export default TradeTagDropdown;

@@ -12,9 +12,14 @@ export const mergeDuplicateTrade = (tradeArray: TradeData[]) =>
       ) {
         let updatedQuantity =
           currentValue.quantity + accumulator[accumulator.length - 1].quantity;
+
+        let updatedPnlRealized =
+          currentValue.pnl_realized +
+          accumulator[accumulator.length - 1].pnl_realized;
         accumulator[accumulator.length - 1] = {
           ...accumulator[accumulator.length - 1],
           quantity: updatedQuantity,
+          pnl_realized: updatedPnlRealized,
         };
       } else {
         accumulator.push(currentValue);

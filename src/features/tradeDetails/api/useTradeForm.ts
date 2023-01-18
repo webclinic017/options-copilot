@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 
 import { TradeTag } from "@/interfaces/trade";
+import { supabase } from "@/utils/supabaseClient";
 
-import { useDeleteTradeTags } from "../TradeTags/useDeleteTradeTags";
+import { useDeleteTradeTags } from "../../tags/api/useDeleteTradeTags";
 import { useAddTradeDetails } from "./useAddTradeDetails";
 
 const useTradeForm = (formState: TradeTag[]) => {
+  const { id } = supabase.auth.user();
+
   const [formData, setFormData] = useState({
     setup: formState.filter((tag) => tag.tag_type === "setup") ?? [],
     mistake: formState.filter((tag) => tag.tag_type === "mistake") ?? [],
@@ -34,9 +37,8 @@ const useTradeForm = (formState: TradeTag[]) => {
   };
 
   const handleDataSubmit = (
-    contractId: number,
+    contractId: number | string | string[],
     tradeDate: string,
-    userId: string,
     savedTags: TradeTag[]
   ) => {
     setFormData({
@@ -48,7 +50,7 @@ const useTradeForm = (formState: TradeTag[]) => {
       .map((tag) => ({
         contract_id: contractId,
         date: tradeDate,
-        user_id: userId,
+        user_id: id,
         tag_id: tag.tag_id,
       }));
 

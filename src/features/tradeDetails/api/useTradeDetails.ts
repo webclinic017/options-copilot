@@ -9,25 +9,13 @@ export const useTradeDetails = (
   symbol,
   contract_id,
   date_time,
-  initialTradeData,
   allTags,
   tradeTags
 ) => {
   const user = supabase.auth.user();
   const timeFrame = useAtomValue(timeFrameAtom);
-
   return useQueries({
     queries: [
-      {
-        queryKey: ["symbol", symbol],
-        queryFn: () => fetchStockInfo(symbol),
-      },
-      {
-        queryKey: ["tradesById", contract_id, date_time],
-        queryFn: () => fetchTradesById(contract_id, date_time, user.id),
-        keepPreviousData: true,
-        initialData: initialTradeData,
-      },
       {
         queryKey: ["candles", symbol, date_time, timeFrame],
         queryFn: () => fetchCandles(symbol, date_time, timeFrame),
@@ -81,42 +69,6 @@ export const fetchTradeTags = async (user_id: string) => {
   }
 
   return { data };
-};
-
-export const fetchTradesById = async (
-  contract_id: string,
-  date_time: Date,
-  user_id: string
-) => {
-  const nextDay = new Date(date_time);
-  nextDay.setDate(nextDay.getDate() + 1);
-
-  const { data, error, count } = await supabase
-    .from("trade_records")
-    .select(`*`, { count: "exact" })
-    .eq("user_id", user_id)
-    .eq("contract_id", contract_id)
-    .gte("date_time", date_time)
-    .lt("date_time", nextDay.toLocaleDateString("en-US", { timeZone: "UTC" }));
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  if (!data) {
-    throw new Error("Trades not found");
-  }
-
-  return { trades: data, count };
-};
-
-const fetchStockInfo = async (symbol) => {
-  const data = await (
-    await fetch(
-      `https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${process.env.NEXT_PUBLIC_FINNHUB_API_KEY}`
-    )
-  ).json();
-  return data;
 };
 
 /**
