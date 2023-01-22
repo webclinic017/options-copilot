@@ -1,6 +1,6 @@
+import Layout from "../components/Layout";
 import useAuth from "../hooks/useAuth";
 import { supabase } from "../utils/supabaseClient";
-import Layout from "../components/Layout";
 
 const Home = () => {
   const { signOut } = useAuth();

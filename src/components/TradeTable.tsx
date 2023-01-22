@@ -1,11 +1,14 @@
-import Image from "next/image";
 import React from "react";
+
+import Image from "next/image";
+import { useRouter } from "next/router";
+
 import { EMPTY_SELECTOR_STATE } from "../constants";
-import { tradeData } from "../interfaces/trade";
+import { TradeData } from "../interfaces/trade";
 import SortIconButton from "./SortIconButton";
 
 interface Props {
-  trades: tradeData[];
+  trades: TradeData[];
   isLoading: boolean;
   selectTradeToDelete: number | number[];
   setSelectTradeToDelete: (data: number | number[]) => void;
@@ -25,6 +28,8 @@ const TradeTable = ({
   sortOrder,
   setSortOrder,
 }: Props) => {
+  const router = useRouter();
+
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const contractId = Number(event.target.value);
 
@@ -39,13 +44,29 @@ const TradeTable = ({
       : setSelectTradeToDelete(EMPTY_SELECTOR_STATE);
   };
 
+  const handleTradeSelected = (trade: TradeData) => {
+    const selectedDate = new Date(trade.date_time);
+    const dateUrlFormat = `${selectedDate.getFullYear()}-${
+      selectedDate.getMonth() + 1
+    }-${selectedDate.getDate()}`;
+
+    router.push({
+      pathname: `/trades/[symbol]`,
+      query: {
+        symbol: trade.symbol,
+        contract_id: trade.contract_id,
+        date_time: dateUrlFormat,
+      },
+    });
+  };
+
   return (
     <div
       className={`flex flex-col ${
         selectTradeToDelete == EMPTY_SELECTOR_STATE ? "mt-28" : "mt-5"
       }`}
     >
-      <div className="overflow-x-auto max-h-[42rem] mb-5 sm:-mx-6 lg:-mx-8">
+      <div className="overflow-x-auto max-h-[42rem] mb-5 sm:-mx-6 lg:-mx-8 select-none">
         <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
           {trades.length && !isLoading ? (
             <table className="min-w-full  ">
@@ -106,6 +127,7 @@ const TradeTable = ({
                   <tr
                     key={index}
                     className=" bg-gray-900 border-b border-gray-700 transition duration-300 ease-in-out hover:bg-gray-800 cursor-pointer"
+                    onDoubleClick={() => handleTradeSelected(trade)}
                   >
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white text-center">
                       <input

@@ -1,33 +1,39 @@
-import React from "react";
 import { useCSVReader } from "react-papaparse";
-import { csvData } from "../interfaces/trade";
+
 import { User } from "@supabase/supabase-js";
-import { useAddTrades } from "../hooks/TradeHooks/useAddTrades";
+
+import { mergeDuplicateTrade } from "@/utils/sort";
+
+import { useAddTrades } from "../api/addTrades";
+import { CsvData } from "../types";
 
 interface Props {
   user: User;
 }
 
-const ButtonFileUpload = ({ user }: Props) => {
+export const CsvButtonUpload = ({ user }: Props) => {
   const { CSVReader } = useCSVReader();
   const { mutate } = useAddTrades();
 
   const handleOnDrop = async ({ data: fileData }) => {
-    const dbData = fileData
-      .filter((data: csvData) => data.UnderlyingSymbol)
-      .map((filteredData: csvData) => {
+    const incomingData = fileData
+      .filter((data: CsvData) => data.Symbol)
+      .map((filteredData: CsvData) => {
         return {
           contract_id: filteredData.Conid,
           user_id: user.id,
-          symbol: filteredData.UnderlyingSymbol,
+          symbol: filteredData.Symbol.substring(0, 4).trim(),
           description: filteredData.Description,
           quantity: filteredData.Quantity,
-          trade_price: filteredData.TradeMoney,
+          trade_price: filteredData.TradePrice,
           pnl_realized: filteredData.FifoPnlRealized,
           date_time: filteredData.DateTime,
         };
       });
-    mutate(dbData);
+
+    // const mergedTrades = mergeDuplicateTrade(incomingData);
+    // mutate(mergedTrades)
+    mutate(mergeDuplicateTrade(incomingData));
   };
 
   return (
@@ -46,16 +52,25 @@ const ButtonFileUpload = ({ user }: Props) => {
       }: any) => (
         <div>
           <button
-            className="bg-blue-400 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded inline-flex items-center duration-300"
+            className="btn btn-primary rounded-l-none"
             {...getRootProps()}
           >
             <svg
-              className="fill-current w-4 h-4 mr-2"
+              width="24px"
+              height="24px"
               xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="currentColor"
             >
-              <path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
+              />
             </svg>
+
             <span>Import CSV</span>
           </button>
         </div>
@@ -63,5 +78,3 @@ const ButtonFileUpload = ({ user }: Props) => {
     </CSVReader>
   );
 };
-
-export default ButtonFileUpload;

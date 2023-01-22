@@ -1,7 +1,8 @@
 import React from "react";
-import SortIcon from "@rsuite/icons/Sort";
-import ArrowUpLineIcon from "@rsuite/icons/ArrowUpLine";
+
 import ArrowDownLineIcon from "@rsuite/icons/ArrowDownLine";
+import ArrowUpLineIcon from "@rsuite/icons/ArrowUpLine";
+import SortIcon from "@rsuite/icons/Sort";
 
 interface Props {
   sortOrder: any;

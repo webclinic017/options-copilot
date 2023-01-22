@@ -1,14 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ManualTrade } from "../../interfaces/trade";
-import { supabase } from "../../utils/supabaseClient";
+
+import { ManualTrade } from "@/interfaces/trade";
+import { supabase } from "@/utils/supabaseClient";
 
 const addTrade = async (data: ManualTrade | ManualTrade[]) => {
   const { data: trades, error: err } = await supabase
     .from("trade_records")
-    .upsert(data, {
-      onConflict: "contract_id, date_time,quantity",
-      ignoreDuplicates: true,
-    });
+    .insert(data);
 
   if (err) {
     console.log("err", err);

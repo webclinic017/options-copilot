@@ -1,6 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
+
 import Link from "next/link";
 import { useRouter } from "next/router";
+
+import { TABLE_BREAK_POINT } from "../constants";
+import { useWindowSize } from "../hooks/useWindowSize";
 import {
   RobotLogo,
   HomeIcon,
@@ -8,8 +12,6 @@ import {
   ReportIcon,
   AnalyticsIcon,
 } from "./icons";
-import { useWindowSize } from "../hooks/useWindowSize";
-import { tableBreakPoint } from "../constants";
 
 const menuItems = [
   { id: 1, label: "Home", icon: HomeIcon, link: "/" },
@@ -29,7 +31,7 @@ const Sidebar = () => {
   const windowSize = useWindowSize();
 
   useEffect(() => {
-    if (windowSize.width <= tableBreakPoint) {
+    if (windowSize.width <= TABLE_BREAK_POINT) {
       setToggleCollapse(true);
     }
   }, [toggleCollapse, windowSize.width]);
@@ -48,8 +50,8 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`h-screen px-4  pt-12 pb-4 flex justify-between flex-col  bg-gray-800 ${
-        toggleCollapse ? "w-24" : "w-80"
+      className={`h-screen px-4  pt-12 pb-4 flex justify-between flex-col  bg-neutral-focus ${
+        toggleCollapse ? "w-24" : "w-72"
       } `}
       onMouseEnter={() => onMouseOver(true)}
       onMouseLeave={() => onMouseOver(false)}

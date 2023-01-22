@@ -1,9 +1,10 @@
-import Head from "next/head";
-import { AppProps } from "next/app";
-import "../styles/index.css";
-import { AuthProvider } from "../hooks/useAuth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { AppProps } from "next/app";
+import Head from "next/head";
+
+import { AuthProvider } from "../hooks/useAuth";
+import "../styles/index.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {

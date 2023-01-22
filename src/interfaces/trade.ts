@@ -1,23 +1,23 @@
-export interface csvData {
+export interface CsvData {
   UnderlyingSymbol: string;
   Description: string;
   DateTime: string;
   Conid: number;
   Quantity: number;
-  TradeMoney: number;
+  TradePrice: number;
   FifoPnlRealized: number;
 }
 
-export interface tradeData {
+export interface TradeData {
   contract_id: number;
-  date_time: String;
+  date_time: string;
   description: string;
   id: number;
   pnl_realized: number;
   quantity: number;
-  symbol: String;
+  symbol: string;
   trade_price: number;
-  user_id: String;
+  user_id: string;
 }
 
 export interface ManualTrade {
@@ -29,4 +29,47 @@ export interface ManualTrade {
   openTradePrice: number;
   closeTradePrice: number;
   quantity: number;
+}
+
+export interface TradeTag {
+  name?: string;
+  value: string;
+  label: string;
+  tag_type: string;
+  tag_id: number;
+}
+
+export interface ContractTag {
+  contract_id: number;
+  date: string;
+  tag_id: number;
+  user_id: string;
+}
+
+export interface TradeDetails {
+  tradeData: {
+    trades: TradeData[];
+    count: number;
+  };
+  stockData: {
+    c: number;
+    d: number;
+    dp: number;
+    h: number;
+    l: number;
+    o: number;
+    pc: number;
+    t: number;
+  };
+  allTags: {
+    data: TradeTag[];
+  };
+  contractTags: {
+    data: ContractTag[];
+  };
+}
+
+export interface DeleteTagState {
+  modalToggle: boolean;
+  deleteTagId: null | number;
 }

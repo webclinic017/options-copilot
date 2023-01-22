@@ -6,7 +6,7 @@ type sortFilter = {
   dateRange?: null | [Date, Date];
 };
 
-const useTradeFilters = () => {
+export const useTradeFilters = () => {
   const [sortOrder, setSortOrder] = useState<sortFilter>({
     name: "date_time",
     ascending: false,
@@ -18,5 +18,3 @@ const useTradeFilters = () => {
     [sortOrder, setSortOrder]
   );
 };
-
-export default useTradeFilters;

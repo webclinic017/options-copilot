@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
-import Image from "next/image";
+import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import useAuth from "../hooks/useAuth";
+
+import Image from "next/image";
 import { useRouter } from "next/router";
+
+import useAuth from "../hooks/useAuth";
 
 interface Inputs {
   email: string;
@@ -12,7 +14,6 @@ interface Inputs {
 
 const Login = () => {
   const [isSigningIn, setIsSigningIn] = useState(true);
-  const router = useRouter();
   const [login, setLogin] = useState(true);
   const { signIn, signUp } = useAuth();
   const {
