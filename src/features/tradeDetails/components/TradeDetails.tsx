@@ -1,30 +1,29 @@
 import React from "react";
 
+import { useAtomValue } from "jotai";
 import { Popover, Whisper } from "rsuite";
 
-import { TradeData } from "@/features/tradeHistory";
-
 import { useGetSymbol } from "../api/getSymbol";
+import {
+  tradePnlRealizedAtom,
+  totalTradeVolumeAtom,
+  selectedDateAtom,
+  tradeByIdAtom,
+} from "../atom";
 
 type Props = {
   symbol: string | string[];
-  tradeData: TradeData[]; // fix this type import to general typing,
   children?: React.ReactNode;
 };
 
-export const TradeDetails = ({ symbol, tradeData, children }: Props) => {
+export const TradeDetails = ({ symbol, children }: Props) => {
   const { data: symbolData } = useGetSymbol(symbol);
-  const selectedDate = new Date(tradeData[0]?.date_time);
 
-  const profitOrLoss =
-    tradeData.reduce((acc, obj) => {
-      return acc + obj.pnl_realized;
-    }, 0) ?? 0;
+  const selectedTrade = useAtomValue(tradeByIdAtom);
+  const selectedDate = useAtomValue(selectedDateAtom);
+  const tradePnlRealized = useAtomValue(tradePnlRealizedAtom);
+  const totalTradeVolue = useAtomValue(totalTradeVolumeAtom);
 
-  const totalOptionsTraded =
-    tradeData?.reduce((acc, obj) => {
-      return acc + Math.abs(obj.quantity);
-    }, 0) ?? 0;
   return (
     <div
       data-theme="black"
@@ -46,15 +45,17 @@ export const TradeDetails = ({ symbol, tradeData, children }: Props) => {
 
       <div className="text-base flex justify-between">
         <div>Contract Desc</div>
-        <span>{tradeData[0]?.description}</span>
+        <span>{selectedTrade[0]?.description}</span>
       </div>
 
       <div className="text-base flex justify-between">
         NET P&L
         <span
-          className={`${profitOrLoss > 0 ? "text-green-500" : "text-red-500"}`}
+          className={`${
+            tradePnlRealized > 0 ? "text-green-500" : "text-red-500"
+          }`}
         >
-          ${profitOrLoss.toFixed(2)}
+          ${tradePnlRealized.toFixed(2)}
         </span>
       </div>
       <div className="text-base flex justify-between  cursor-pointer">
@@ -63,7 +64,7 @@ export const TradeDetails = ({ symbol, tradeData, children }: Props) => {
           speaker={
             <Popover className="bg-black">
               <ul>
-                {tradeData.map((data) => (
+                {selectedTrade.map((data) => (
                   <div key={data.id}>{`${data.quantity > 0 ? "Buy" : "Sell"} ${
                     data.quantity
                   } @ ${data.date_time.slice(11)}`}</div>
@@ -74,7 +75,7 @@ export const TradeDetails = ({ symbol, tradeData, children }: Props) => {
         >
           <p className="underline">Options Traded</p>
         </Whisper>
-        <span> {totalOptionsTraded} </span>
+        <span> {totalTradeVolue} </span>
       </div>
 
       <div className="text-base flex justify-between">Proft Target</div>

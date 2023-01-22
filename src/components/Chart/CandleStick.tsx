@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
 
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import {
   createChart,
   SeriesMarker,
@@ -16,24 +16,15 @@ import { timeFrameAtom } from "src/atoms";
 import { timeFrameReducer } from "src/reducers/timeFrameModalReducer";
 
 import { TIME_FRAMES } from "@/constants/index";
-import { TradeData } from "@/interfaces/trade";
+import { stockCandlesAtom, tradeByIdAtom } from "@/features/tradeDetails/atom";
 import { timeToLocal } from "@/utils/helper";
 
 import TimeFrameModal from "../Modals/TimeFrameModal";
 
-interface CandleStickProps {
-  tradeData: TradeData[];
-  candleData: {
-    time: Time;
-    close: number;
-    high: number;
-    low: number;
-    open: number;
-    volume: number;
-  }[];
-}
+const CandleStick = () => {
+  const tradeData = useAtomValue(tradeByIdAtom);
+  const candleData = useAtomValue(stockCandlesAtom);
 
-const CandleStick = (props: CandleStickProps) => {
   const chartRef = useRef<HTMLDivElement>();
   const [legend, setLegend] = useState("");
   const [{ isModalOpen, data, isError }, dispatch] = useReducer(
@@ -78,7 +69,7 @@ const CandleStick = (props: CandleStickProps) => {
         bottom: 0,
       },
     });
-    const volumeData = props.candleData.map((candleStick) => {
+    const volumeData = candleData.map((candleStick) => {
       return {
         time: candleStick.time,
         value: candleStick.volume,
@@ -89,9 +80,9 @@ const CandleStick = (props: CandleStickProps) => {
     volumeSeries.setData(volumeData);
 
     const candleSeries = chart.addCandlestickSeries();
-    candleSeries.setData(props.candleData);
+    candleSeries.setData(candleData);
 
-    const markers: SeriesMarker<Time>[] = props.tradeData.map((trade) => ({
+    const markers: SeriesMarker<Time>[] = tradeData.map((trade) => ({
       time: (timeToLocal(new Date(trade.date_time).getTime() / 1000) -
         SIXTY_SECOND_TIMEFRAME) as UTCTimestamp,
       position: trade.quantity > 0 ? "belowBar" : "aboveBar",
@@ -109,7 +100,7 @@ const CandleStick = (props: CandleStickProps) => {
       if (!param.point) {
         return;
       }
-      const chartHoverData = props.candleData.find((x) => x.time == param.time);
+      const chartHoverData = candleData.find((x) => x.time == param.time);
       if (chartHoverData) {
         const hoverStr = `O: ${chartHoverData.open} H: ${chartHoverData.high} L: ${chartHoverData.low} C: ${chartHoverData.close}`;
         setLegend(hoverStr);
@@ -121,7 +112,7 @@ const CandleStick = (props: CandleStickProps) => {
     return () => {
       chart.remove();
     };
-  }, [props]);
+  }, [candleData]);
 
   const handleKeyPress = () => {
     if (!isModalOpen) dispatch({ type: TOGGLE_MODAL });

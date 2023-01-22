@@ -35,7 +35,7 @@ export const useDeleteTradeTags = () => {
     }) => deleteTradeTags(data),
     {
       onSuccess: () => {
-        queryClient.refetchQueries(["tradeTagsByContract"]);
+        queryClient.refetchQueries(["tradeTags"]);
       },
     }
   );

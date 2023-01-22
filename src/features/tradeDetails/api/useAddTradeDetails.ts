@@ -30,7 +30,7 @@ export const useAddTradeDetails = () => {
     ) => addTradeDetails(data),
     {
       onSuccess: () => {
-        queryClient.refetchQueries(["tradeTagsByContract"]);
+        queryClient.refetchQueries(["tradeTags"]);
       },
     }
   );

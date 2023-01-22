@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { components } from "react-select";
 import CreatableSelect from "react-select/creatable";
 
-import { useAddTradeTags } from "../api/useAddTradeTags";
+import { useAddTradeTags } from "../api";
 
 export const TradeTagDropdown = ({
   options,

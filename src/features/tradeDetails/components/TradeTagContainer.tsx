@@ -6,30 +6,18 @@ import { DeleteTagModal } from "@/features/tags";
 import useTradeForm from "@/features/tradeDetails/api/useTradeForm";
 import { DeleteTagState, TradeTag } from "@/interfaces/trade";
 
+import { useGetTradeTags } from "../api";
 import { TradeTagDropdown } from "../components/TradeTagDropdown";
 
-type Props = {
-  allTags: {
-    data: TradeTag[];
-  };
-  contractTags: {
-    data: TradeTag[];
-  };
-  contractId: string | string[];
-  dateTime: any;
-};
+export const TradeTagContainer = ({ contractId, dateTime }) => {
+  const { data } = useGetTradeTags(contractId, dateTime);
 
-export const TradeTagContainer = ({
-  allTags,
-  contractTags,
-  contractId,
-  dateTime,
-}: Props) => {
+  const [allTags, contractTags] = data;
   const [deleteTradeTag, setDeleteTradeTag] = useState<DeleteTagState>({
     modalToggle: false,
     deleteTagId: null,
   });
-  const options = allTags.data.map((tag) => {
+  const options = allTags.map((tag) => {
     return {
       value: tag.name,
       label: tag.name,
@@ -38,11 +26,9 @@ export const TradeTagContainer = ({
     };
   });
 
-  const savedTags = allTags.data
+  const savedTags = allTags
     .filter(({ tag_id: tagId }) =>
-      contractTags.data.some(
-        ({ tag_id: contractTagId }) => tagId === contractTagId
-      )
+      contractTags.some(({ tag_id: contractTagId }) => tagId === contractTagId)
     )
     .map(({ name, tag_type, tag_id }) => {
       return {
