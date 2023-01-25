@@ -1,7 +1,6 @@
 import React from "react";
 
 import { useAtomValue } from "jotai";
-import { Popover, Whisper } from "rsuite";
 
 import { useGetSymbol } from "../api/getSymbol";
 import {
@@ -10,6 +9,7 @@ import {
   selectedDateAtom,
   tradeByIdAtom,
 } from "../atom";
+import { TradePopover } from "./TradePopover";
 
 type Props = {
   symbol: string | string[];
@@ -59,22 +59,7 @@ export const TradeDetails = ({ symbol, children }: Props) => {
         </span>
       </div>
       <div className="text-base flex justify-between  cursor-pointer">
-        <Whisper
-          followCursor
-          speaker={
-            <Popover className="bg-black">
-              <ul>
-                {selectedTrade.map((data) => (
-                  <div key={data.id}>{`${data.quantity > 0 ? "Buy" : "Sell"} ${
-                    data.quantity
-                  } @ ${data.date_time.slice(11)}`}</div>
-                ))}
-              </ul>
-            </Popover>
-          }
-        >
-          <p className="underline">Options Traded</p>
-        </Whisper>
+        <TradePopover />
         <span> {totalTradeVolue} </span>
       </div>
 

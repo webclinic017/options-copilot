@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { notify } from "@/components/Toast/ToastMessage";
 import { supabase } from "@/utils/supabaseClient";
 
 const addTradeDetails = async (data) => {
@@ -31,6 +32,7 @@ export const useAddTradeDetails = () => {
     {
       onSuccess: () => {
         queryClient.refetchQueries(["tradeTags"]);
+        notify("success", "Trade Details Updated");
       },
     }
   );

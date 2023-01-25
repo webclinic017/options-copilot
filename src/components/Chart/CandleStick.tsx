@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
 
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import {
   createChart,
   SeriesMarker,
@@ -24,6 +24,7 @@ import TimeFrameModal from "../Modals/TimeFrameModal";
 const CandleStick = () => {
   const tradeData = useAtomValue(tradeByIdAtom);
   const candleData = useAtomValue(stockCandlesAtom);
+  const [timeframe, setTimeFrame] = useAtom(timeFrameAtom);
 
   const chartRef = useRef<HTMLDivElement>();
   const [legend, setLegend] = useState("");
@@ -84,7 +85,7 @@ const CandleStick = () => {
 
     const markers: SeriesMarker<Time>[] = tradeData.map((trade) => ({
       time: (timeToLocal(new Date(trade.date_time).getTime() / 1000) -
-        SIXTY_SECOND_TIMEFRAME) as UTCTimestamp,
+        SIXTY_SECOND_TIMEFRAME * timeframe) as UTCTimestamp,
       position: trade.quantity > 0 ? "belowBar" : "aboveBar",
       color: trade.quantity > 0 ? "#071de09a" : "#ef5350",
       shape: trade.quantity > 0 ? "arrowUp" : "arrowDown",
@@ -102,7 +103,11 @@ const CandleStick = () => {
       }
       const chartHoverData = candleData.find((x) => x.time == param.time);
       if (chartHoverData) {
-        const hoverStr = `O: ${chartHoverData.open} H: ${chartHoverData.high} L: ${chartHoverData.low} C: ${chartHoverData.close}`;
+        const hoverStr = `O: ${chartHoverData.open.toFixed(
+          2
+        )} H: ${chartHoverData.high.toFixed(2)} L: ${chartHoverData.low.toFixed(
+          2
+        )} C: ${chartHoverData.close.toFixed(2)}`;
         setLegend(hoverStr);
       }
     });
@@ -128,7 +133,6 @@ const CandleStick = () => {
     }
   };
 
-  const setTimeFrame = useSetAtom(timeFrameAtom);
   const handleSuccess = () => {
     setTimeFrame(parseInt(data)), dispatch({ type: TOGGLE_MODAL });
   };
