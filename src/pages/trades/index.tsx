@@ -16,7 +16,7 @@ import { supabase } from "@/utils/supabaseClient";
 const trades = ({ user }) => {
   const setTradeRange = useSetAtom(dateRangeAtom);
   const dateRangeStr = useAtomValue(dateRangeString);
-  const { data } = useGetTrades(dateRangeStr);
+  const { data, isSuccess } = useGetTrades(dateRangeStr);
 
   const handleSelectDate = (value) => {
     setTradeRange(value);
@@ -36,7 +36,7 @@ const trades = ({ user }) => {
       </div>
 
       <TradeTable />
-      {!!data?.length && <TradePagination totalTrades={data.length} />}
+      {isSuccess && <TradePagination totalTrades={data.length} />}
     </Layout>
   );
 };

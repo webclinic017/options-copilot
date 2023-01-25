@@ -25,6 +25,7 @@ const useTradeForm = (formState: TradeTag[]) => {
       setFormData({
         ...formData,
         loading: false,
+        toggle: true,
       });
     }
   }, [isSuccess]);
