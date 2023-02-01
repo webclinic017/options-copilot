@@ -10,7 +10,7 @@ type TradeRange = {
   endDate: Date;
 };
 
-export const useGetTrades = (tradeRange: TradeRange) => {
+export const useGetTrades = (tradeRange?: TradeRange) => {
   const user = supabase.auth.user();
   const setTrades = useSetAtom(tradeDataAtom);
 
