@@ -53,3 +53,17 @@ export const dateRangeString = atom((get) => {
   const { startDate, endDate } = getTradeRangeTime(dateRange);
   return { startDate, endDate };
 });
+
+export const datePickerAtom = atom((get) => {
+  const dateRange = get(dateRangeAtom);
+  if (!dateRange.length) {
+    return null;
+  }
+
+  const demo: [Date, Date] = [new Date(dateRange[0]), new Date(dateRange[1])];
+
+  return demo;
+});
+/*
+TODO: Look into seperating this file between different features/global atoms
+*/
