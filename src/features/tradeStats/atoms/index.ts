@@ -38,5 +38,10 @@ export const dateStatPickerAtom = atom((get) => {
     return null;
   }
 
-  return [new Date(dateRange[0]), new Date(dateRange[1])];
+  const formattedDateRange: [Date, Date] = [
+    new Date(dateRange[0]),
+    new Date(dateRange[1]),
+  ];
+
+  return formattedDateRange;
 });
